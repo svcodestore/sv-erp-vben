@@ -22,7 +22,7 @@ const editConfig = {
 export const gridBasicProps = {
   id: { type: String as PropType<string>, default: () => 'svGrid' },
   columns: { type: Array as PropType<GridColumnType[]>, default: () => [] },
-  data: { type: Array as PropType<unknown[]>, default: () => [] },
+  data: { type: Array as PropType<unknown[]> },
   height: { type: Number as PropType<number>, default: () => 500 },
   autoResize: { type: Boolean as PropType<boolean>, default: () => true },
   syncResize: { type: Boolean as PropType<boolean>, default: () => true },

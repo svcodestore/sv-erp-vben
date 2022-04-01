@@ -83,7 +83,16 @@
   const filterStr = ref('');
 
   const attrs = computed(() => {
-    return Object.assign({}, props, { data: gridData.value, columns: wrappedColumns.value });
+    const wrap = Object.assign({}, props, {
+      columns: wrappedColumns.value,
+    });
+    if (!props.proxyConfig) {
+      return Object.assign(wrap, {
+        data: gridData.value,
+      });
+    }
+
+    return wrap;
   });
 
   const events = computed(() => {
