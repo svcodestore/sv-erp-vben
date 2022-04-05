@@ -9,6 +9,7 @@ dist
 .env.local
 .env.*.local
 .eslintcache
+.env.development
 
 # Log files
 npm-debug.log*
