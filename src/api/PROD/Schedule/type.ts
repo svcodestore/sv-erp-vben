@@ -10,3 +10,26 @@ export type ScheduleRequest = {
   month: number;
   workLine: string;
 };
+
+export type SchedulePhaseItem = {
+  name: string;
+  codeId: string;
+  costTime: number;
+  aheadTime: number;
+  deadTime: number;
+  outTime: number;
+  workerNum: number;
+  isMaster: number;
+  startAt: string;
+  completeAt: string;
+};
+
+export type ScheduleItem = {
+  workshop: string;
+  workshopName: string;
+  customerNo: string;
+  customerPoNo: string;
+  itemCode: string;
+  itemQty: number;
+  phases: SchedulePhaseItem[];
+};

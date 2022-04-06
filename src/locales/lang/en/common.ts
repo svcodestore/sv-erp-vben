@@ -27,4 +27,6 @@ export default {
 
   enable: 'Enable',
   disable: 'Disable',
+
+  noData: 'No Data',
 };

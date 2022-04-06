@@ -27,4 +27,6 @@ export default {
 
   enable: '启用',
   disable: '禁用',
+
+  noData: '暂无数据',
 };
