@@ -11,6 +11,15 @@ export type ScheduleRequest = {
   workLine: string;
 };
 
+export type Po = {
+  workshop: string;
+  workshopName: string;
+  customerNo: string;
+  customerPoNo: string;
+  itemCode: string;
+  itemQty: number;
+};
+
 export type SchedulePhaseItem = {
   name: string;
   codeId: string;
@@ -24,12 +33,6 @@ export type SchedulePhaseItem = {
   completeAt: string;
 };
 
-export type ScheduleItem = {
-  workshop: string;
-  workshopName: string;
-  customerNo: string;
-  customerPoNo: string;
-  itemCode: string;
-  itemQty: number;
+export type ScheduleItem = Po & {
   phases: SchedulePhaseItem[];
 };

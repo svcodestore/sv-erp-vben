@@ -4,7 +4,7 @@
     title="标准工时设置"
     content=" 排程计划中生产款工站的属性设置，不同的属性设置将影响排程计划时间。"
   >
-    <sv-grid class="bg-white" v-bind="gridOptions" @refresh="handleRefresh">
+    <sv-grid class="bg-white" v-bind="gridOptions">
       <template #isMaster="{ row, column }">
         <span>
           {{ row[column.property] == 1 ? '主流程' : '副流程' }}
@@ -18,10 +18,24 @@
   import { PageWrapper } from '/@/components/Page';
   import { reactive } from 'vue';
   import { GridPropsType } from '/@/components/Grid/src/types';
+  import { getPhaseByCode, getPo } from '/@/api/PROD/Schedule';
 
   const gridOptions = reactive<GridPropsType>({
     loading: false,
     height: 600,
+    proxyConfig: {
+      ajax: {
+        query: async () => {
+          const po = await getPo({
+            workLine: 'N',
+            year: 2022,
+            month: 3,
+          });
+          const code = po.map((e) => e.itemCode).join(',');
+          return getPhaseByCode({ code });
+        },
+      },
+    },
     columns: [
       { type: 'seq', width: 50 },
       { title: '款号', field: 'code' },
@@ -82,5 +96,4 @@
       },
     ],
   });
-  const handleRefresh = () => {};
 </script>
