@@ -4001,7 +4001,7 @@ packages:
     engines: {node: '>=0.10.0'}
 
   /decode-uri-component/0.2.0:
-    resolution: {integrity: sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=}
+    resolution: {integrity: sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og==}
     engines: {node: '>=0.10'}
     dev: true
 
@@ -8736,7 +8736,7 @@ packages:
     dev: true
 
   /strict-uri-encode/1.1.0:
-    resolution: {integrity: sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=}
+    resolution: {integrity: sha512-R3f198pcvnB+5IpnBlRkphuE9n46WyVl8I39W/ZUTZLz4nqSP/oLYUrcnJrw462Ds8he4YKMov2efsTIw1BDGQ==}
     engines: {node: '>=0.10.0'}
     dev: true
 
