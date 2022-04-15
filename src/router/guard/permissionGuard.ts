@@ -55,20 +55,19 @@ export function createPermissionGuard(router: Router) {
         return;
       }
 
-      // // redirect sso page
-      // // 60f9bd80d01913d3c74e
-      // // 6ec3749d9bc70dbacaa58ed378243bb01c655ed3
-      // const origin = window.location.origin;
-      // const authPath = import.meta.env.VITE_SSO_API_URL;
-      // console.log(authPath);
-      // const authSearchParams = new URLSearchParams();
-      // authSearchParams.append('response_type', 'code');
-      // authSearchParams.append('client_id', '60f9bd80d01913d3c74e');
-      // authSearchParams.append('client_id', '60f9bd80d01913d3c74e');
-      // authSearchParams.append('redirect_uri', new URL('/callback', origin).toString());
-      // authSearchParams.append('scope', 'read');
-      // const authHref = authPath + authSearchParams.toString();
-      // window.location.href = authHref;
+      // redirect sso page
+      // 60f9bd80d01913d3c74e
+      // 6ec3749d9bc70dbacaa58ed378243bb01c655ed3
+      const origin = window.location.origin;
+      const authPath = import.meta.env.VITE_SSO_API_URL;
+      console.log(authPath);
+      const authSearchParams = new URLSearchParams();
+      authSearchParams.append('response_type', 'code');
+      authSearchParams.append('client_id', '60f9bd80d01913d3c74e');
+      authSearchParams.append('redirect_uri', new URL('/callback', origin).toString());
+      authSearchParams.append('scope', 'read');
+      const authHref = authPath + authSearchParams.toString();
+      window.location.href = authHref;
     }
 
     // Jump to the 404 page after processing the login
