@@ -49,6 +49,11 @@ export function createPermissionGuard(router: Router) {
 
     // token does not exist
     if (!token) {
+      if (to.fullPath.startsWith('/callback')) {
+        next();
+        return;
+      }
+
       // You can access without permission. You need to set the routing meta.ignoreAuth to true
       if (to.meta.ignoreAuth) {
         next();
