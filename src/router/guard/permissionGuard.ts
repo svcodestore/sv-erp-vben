@@ -8,6 +8,7 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { RootRoute } from '/@/router/routes';
+import { authenticationRoutes } from '/@/router/routes/auth';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 
@@ -50,6 +51,7 @@ export function createPermissionGuard(router: Router) {
     // token does not exist
     if (!token) {
       if (to.fullPath.startsWith('/callback')) {
+        router.addRoute(authenticationRoutes as unknown as RouteRecordRaw);
         next();
         return;
       }
