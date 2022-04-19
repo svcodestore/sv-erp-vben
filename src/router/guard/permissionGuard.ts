@@ -1,3 +1,4 @@
+import { goSsoLogin } from '/@/utils/auth';
 import type { Router, RouteRecordRaw } from 'vue-router';
 
 import { usePermissionStoreWithOut } from '/@/store/modules/permission';
@@ -7,12 +8,9 @@ import { useUserStoreWithOut } from '/@/store/modules/user';
 
 import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
-import { RootRoute } from '/@/router/routes';
 import { authenticationRoutes } from '/@/router/routes/auth';
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
-
-const ROOT_PATH = RootRoute.path;
 
 const whitePathList: PageEnum[] = [LOGIN_PATH];
 
@@ -20,30 +18,10 @@ export function createPermissionGuard(router: Router) {
   const userStore = useUserStoreWithOut();
   const permissionStore = usePermissionStoreWithOut();
   router.beforeEach(async (to, from, next) => {
-    if (
-      from.path === ROOT_PATH &&
-      to.path === PageEnum.BASE_HOME &&
-      userStore.getUserInfo.homePath &&
-      userStore.getUserInfo.homePath !== PageEnum.BASE_HOME
-    ) {
-      next(userStore.getUserInfo.homePath);
-      return;
-    }
-
-    const token = userStore.getToken;
+    const token = userStore.getAccessToken;
 
     // Whitelist can be directly entered
     if (whitePathList.includes(to.path as PageEnum)) {
-      if (to.path === LOGIN_PATH && token) {
-        const isSessionTimeout = userStore.getSessionTimeout;
-        try {
-          await userStore.afterLoginAction();
-          if (!isSessionTimeout) {
-            next((to.query?.redirect as string) || '/');
-            return;
-          }
-        } catch {}
-      }
       next();
       return;
     }
@@ -62,39 +40,21 @@ export function createPermissionGuard(router: Router) {
         return;
       }
 
-      // redirect sso page
-      // 60f9bd80d01913d3c74e
-      // 6ec3749d9bc70dbacaa58ed378243bb01c655ed3
-      const origin = window.location.origin;
-      const authPath = import.meta.env.VITE_SSO_API_URL;
-      console.log(authPath);
-      const authSearchParams = new URLSearchParams();
-      authSearchParams.append('response_type', 'code');
-      authSearchParams.append('client_id', '60f9bd80d01913d3c74e');
-      authSearchParams.append('redirect_uri', new URL('/callback', origin).toString());
-      authSearchParams.append('scope', 'read');
-      const authHref = authPath + authSearchParams.toString();
-      window.location.href = authHref;
+      goSsoLogin();
+    }
+    if (to.fullPath.startsWith('/callback')) {
+      next({ path: '/' });
+      return;
     }
 
     // Jump to the 404 page after processing the login
     if (
       from.path === LOGIN_PATH &&
       to.name === PAGE_NOT_FOUND_ROUTE.name &&
-      to.fullPath !== (userStore.getUserInfo.homePath || PageEnum.BASE_HOME)
+      to.fullPath !== PageEnum.BASE_HOME
     ) {
-      next(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
+      next(PageEnum.BASE_HOME);
       return;
-    }
-
-    // get userinfo while last fetch time is empty
-    if (userStore.getLastUpdateTime === 0) {
-      try {
-        await userStore.getUserInfoAction();
-      } catch (err) {
-        next();
-        return;
-      }
     }
 
     if (permissionStore.getIsDynamicAddedRoute) {
