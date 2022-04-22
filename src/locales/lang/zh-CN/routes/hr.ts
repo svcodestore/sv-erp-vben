@@ -8,7 +8,7 @@ export default {
         index: '项目',
       },
       position: {
-        index: '职位',
+        index: '职务',
       },
       rank: {
         index: '职级',
@@ -17,7 +17,7 @@ export default {
         index: '员工',
       },
       title: {
-        index: '头衔',
+        index: '职称',
       },
     },
     report: {
