@@ -42,6 +42,14 @@ const prod: AppRouteModule = {
               },
             },
             {
+              path: 'rank',
+              name: 'HrKpiInfoRank',
+              component: () => import('/@/views/HR/KPI/Info/Rank/index.vue'),
+              meta: {
+                title: t('routes.hr.kpi.info.rank.index'),
+              },
+            },
+            {
               path: 'position',
               name: 'HrKpiInfoPosition',
               component: () => import('/@/views/HR/KPI/Info/Position/index.vue'),
@@ -50,11 +58,11 @@ const prod: AppRouteModule = {
               },
             },
             {
-              path: 'rank',
-              name: 'HrKpiInfoRank',
-              component: () => import('/@/views/HR/KPI/Info/Rank/index.vue'),
+              path: 'title',
+              name: 'HrKpiInfoTitle',
+              component: () => import('/@/views/HR/KPI/Info/Title/index.vue'),
               meta: {
-                title: t('routes.hr.kpi.info.rank.index'),
+                title: t('routes.hr.kpi.info.title.index'),
               },
             },
             {

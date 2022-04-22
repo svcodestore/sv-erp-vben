@@ -16,6 +16,9 @@ export default {
       staff: {
         index: 'Staff',
       },
+      title: {
+        index: 'Title',
+      },
     },
     report: {
       index: 'Report',

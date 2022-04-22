@@ -16,6 +16,9 @@ export default {
       staff: {
         index: '员工',
       },
+      title: {
+        index: '头衔',
+      },
     },
     report: {
       index: '报表',
