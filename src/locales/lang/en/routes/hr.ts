@@ -13,24 +13,54 @@ export default {
           index: 'Item Category',
         },
       },
-      position: {
-        index: 'Position',
+      title: {
+        index: 'Title',
+        table: {
+          index: 'Title Table',
+        },
+        item: {
+          index: 'Title Item',
+        },
+        category: {
+          index: 'Title Category',
+        },
       },
       rank: {
         index: 'Rank',
+        table: {
+          index: 'Rank Table',
+        },
+        item: {
+          index: 'Rank Item',
+        },
+      },
+      position: {
+        index: 'Position',
+        table: {
+          index: 'Position Table',
+        },
+        item: {
+          index: 'Position Item',
+        },
+        group: {
+          index: 'Position group',
+        },
       },
       staff: {
         index: 'Staff',
       },
-      title: {
-        index: 'Title',
+    },
+    rule: {
+      index: 'Rule',
+      table: {
+        index: 'Rule Table',
+      },
+      item: {
+        index: 'Rule Item',
       },
     },
     report: {
       index: 'Report',
-    },
-    rule: {
-      index: 'Rule',
     },
     score: {
       index: 'Score',
@@ -39,6 +69,9 @@ export default {
       },
       staff: {
         index: 'Staff Score',
+      },
+      directStaff: {
+        index: 'Direct Staff Score',
       },
     },
     statistics: {

@@ -36,7 +36,7 @@ const prod: AppRouteModule = {
             {
               path: 'item',
               name: 'HrKpiInfoItem',
-              component: () => import('../../../views/HR/KPI/Info/Item/table.vue'),
+              component: getParentLayout('HrKpiInfoItem'),
               redirect: '/hr/kpi/info/item/table',
               meta: {
                 title: t('routes.hr.kpi.info.item.index'),
@@ -44,7 +44,7 @@ const prod: AppRouteModule = {
               children: [
                 {
                   path: 'table',
-                  name: 'HrKpiInfoItemList',
+                  name: 'HrKpiInfoItemTable',
                   component: () => import('/@/views/HR/KPI/Info/Item/table.vue'),
                   meta: {
                     title: t('routes.hr.kpi.info.item.table.index'),
@@ -61,28 +61,101 @@ const prod: AppRouteModule = {
               ],
             },
             {
+              path: 'title',
+              name: 'HrKpiInfoTitle',
+              component: getParentLayout('HrKpiInfoTitle'),
+              redirect: '/hr/kpi/info/title/table',
+              meta: {
+                title: t('routes.hr.kpi.info.title.index'),
+              },
+              children: [
+                {
+                  path: 'table',
+                  name: 'HrKpiInfoTitleTable',
+                  component: () => import('/@/views/HR/KPI/Info/Title/table.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.title.table.index'),
+                  },
+                },
+                {
+                  path: 'item',
+                  name: 'HrKpiInfoTitleItem',
+                  component: () => import('/@/views/HR/KPI/Info/Title/item.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.title.item.index'),
+                  },
+                },
+                {
+                  path: 'category',
+                  name: 'HrKpiInfoTitleCategory',
+                  component: () => import('/@/views/HR/KPI/Info/Title/category.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.title.category.index'),
+                  },
+                },
+              ],
+            },
+            {
               path: 'rank',
               name: 'HrKpiInfoRank',
-              component: () => import('/@/views/HR/KPI/Info/Rank/index.vue'),
+              component: () => getParentLayout('HrKpiInfoRank'),
+              redirect: '/hr/kpi/info/rank/table',
               meta: {
                 title: t('routes.hr.kpi.info.rank.index'),
               },
+              children: [
+                {
+                  path: 'table',
+                  name: 'HrKpiInfoRankTable',
+                  component: () => import('/@/views/HR/KPI/Info/Rank/table.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.rank.table.index'),
+                  },
+                },
+                {
+                  path: 'item',
+                  name: 'HrKpiInfoRankItem',
+                  component: () => import('/@/views/HR/KPI/Info/Rank/item.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.rank.item.index'),
+                  },
+                },
+              ],
             },
             {
               path: 'position',
               name: 'HrKpiInfoPosition',
-              component: () => import('/@/views/HR/KPI/Info/Position/index.vue'),
+              component: getParentLayout('HrKpiInfoPosition'),
+              redirect: '/hr/kpi/info/position/table',
               meta: {
                 title: t('routes.hr.kpi.info.position.index'),
               },
-            },
-            {
-              path: 'title',
-              name: 'HrKpiInfoTitle',
-              component: () => import('/@/views/HR/KPI/Info/Title/index.vue'),
-              meta: {
-                title: t('routes.hr.kpi.info.title.index'),
-              },
+              children: [
+                {
+                  path: 'table',
+                  name: 'HrKpiInfoPositionTable',
+                  component: () => import('/@/views/HR/KPI/Info/Position/table.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.title.table.index'),
+                  },
+                },
+                {
+                  path: 'item',
+                  name: 'HrKpiInfoPositionItem',
+                  component: () => import('/@/views/HR/KPI/Info/Position/item.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.title.item.index'),
+                  },
+                },
+                {
+                  path: 'group',
+                  name: 'HrKpiInfoPositionGroup',
+                  component: () => import('/@/views/HR/KPI/Info/Position/group.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.position.group.index'),
+                  },
+                },
+              ],
             },
             {
               path: 'staff',
@@ -97,10 +170,29 @@ const prod: AppRouteModule = {
         {
           path: 'rule',
           name: 'HrKpiRule',
-          component: () => import('/@/views/HR/KPI/Rule/index.vue'),
+          component: getParentLayout('HrKpiRule'),
+          redirect: '/hr/kpi/rule/table',
           meta: {
             title: t('routes.hr.kpi.rule.index'),
           },
+          children: [
+            {
+              path: 'table',
+              name: 'HrKpiRuleTable',
+              component: () => import('/@/views/HR/KPI/Rule/table.vue'),
+              meta: {
+                title: t('routes.hr.kpi.rule.table.index'),
+              },
+            },
+            {
+              path: 'item',
+              name: 'HrKpiRuleItem',
+              component: () => import('/@/views/HR/KPI/Rule/item.vue'),
+              meta: {
+                title: t('routes.hr.kpi.rule.item.index'),
+              },
+            },
+          ],
         },
         {
           path: 'score',
@@ -125,6 +217,14 @@ const prod: AppRouteModule = {
               component: () => import('/@/views/HR/KPI/Score/Staff/index.vue'),
               meta: {
                 title: t('routes.hr.kpi.score.staff.index'),
+              },
+            },
+            {
+              path: 'direct-staff',
+              name: 'HrKpiScoreDirectStaff',
+              component: () => import('/@/views/HR/KPI/Score/DirectStaff/index.vue'),
+              meta: {
+                title: t('routes.hr.kpi.score.directStaff.index'),
               },
             },
           ],

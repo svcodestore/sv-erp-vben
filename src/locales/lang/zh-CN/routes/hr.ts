@@ -13,24 +13,54 @@ export default {
           index: '项目分类',
         },
       },
-      position: {
-        index: '职务',
+      title: {
+        index: '职称',
+        table: {
+          index: '职称表',
+        },
+        item: {
+          index: '职称项',
+        },
+        category: {
+          index: '职称分类',
+        },
       },
       rank: {
         index: '职级',
+        table: {
+          index: '职级表',
+        },
+        item: {
+          index: '职级项',
+        },
+      },
+      position: {
+        index: '职务',
+        table: {
+          index: '职务表',
+        },
+        item: {
+          index: '职务项',
+        },
+        group: {
+          index: '职务分组',
+        },
       },
       staff: {
         index: '员工',
       },
-      title: {
-        index: '职称',
+    },
+    rule: {
+      index: '规则',
+      table: {
+        index: '规则表',
+      },
+      item: {
+        index: '规则项',
       },
     },
     report: {
       index: '报表',
-    },
-    rule: {
-      index: '规则',
     },
     score: {
       index: '评分',
@@ -39,6 +69,9 @@ export default {
       },
       staff: {
         index: '员工评分',
+      },
+      directStaff: {
+        index: '直接人员绩效',
       },
     },
     statistics: {
