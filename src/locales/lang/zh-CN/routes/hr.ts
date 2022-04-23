@@ -6,6 +6,12 @@ export default {
       index: '信息',
       item: {
         index: '项目',
+        table: {
+          index: '项目表',
+        },
+        category: {
+          index: '项目分类',
+        },
       },
       position: {
         index: '职务',

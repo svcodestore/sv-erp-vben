@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper contentFullHeight title="绩效项">
+  <PageWrapper contentFullHeight title="绩效项目表">
     <div class="py-4 bg-white flex flex-col justify-center items-center mb-1">
       <Form layout="inline" :model="formState" @finish="handleFinish">
         <FormItem>

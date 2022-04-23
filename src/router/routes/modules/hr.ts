@@ -36,10 +36,29 @@ const prod: AppRouteModule = {
             {
               path: 'item',
               name: 'HrKpiInfoItem',
-              component: () => import('/@/views/HR/KPI/Info/Item/index.vue'),
+              component: () => import('../../../views/HR/KPI/Info/Item/table.vue'),
+              redirect: '/hr/kpi/info/item/table',
               meta: {
                 title: t('routes.hr.kpi.info.item.index'),
               },
+              children: [
+                {
+                  path: 'table',
+                  name: 'HrKpiInfoItemList',
+                  component: () => import('/@/views/HR/KPI/Info/Item/table.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.item.table.index'),
+                  },
+                },
+                {
+                  path: 'category',
+                  name: 'HrKpiInfoItemCategory',
+                  component: () => import('../../../views/HR/KPI/Info/Item/table.vue'),
+                  meta: {
+                    title: t('routes.hr.kpi.info.item.category.index'),
+                  },
+                },
+              ],
             },
             {
               path: 'rank',

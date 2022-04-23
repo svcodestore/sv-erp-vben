@@ -6,6 +6,12 @@ export default {
       index: 'Info',
       item: {
         index: 'Item',
+        table: {
+          index: 'Item Table',
+        },
+        category: {
+          index: 'Item Category',
+        },
       },
       position: {
         index: 'Position',
