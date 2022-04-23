@@ -1,12 +1,11 @@
 import type { VxeGridProps, VxeGridInstance, VxeTableDefines, VxeGridPropTypes } from 'vxe-table';
-import type { BasicApiResult } from '/@/api/model/baseModel';
 
 interface InsertOptionsType {
   defaultRowValues: { [key: string]: any };
   focusField: string;
 }
 
-type SaveApiType = (modifications: GridModificationApiType) => Promise<BasicApiResult>;
+type SaveApiType = <T>(modifications: GridModificationApiType) => Promise<T>;
 
 type ToolBarCustomType = Partial<{
   saveApi: SaveApiType;

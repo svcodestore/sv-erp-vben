@@ -1,5 +1,11 @@
 export default {
   dept: 'HR DEPT',
+  components: {
+    skeleton: {
+      allCode: 'All Item',
+      mainVersion: 'Main Version',
+    },
+  },
   kpi: {
     index: 'KPI Management',
     info: {

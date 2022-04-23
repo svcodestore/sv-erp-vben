@@ -53,7 +53,7 @@ const prod: AppRouteModule = {
                 {
                   path: 'category',
                   name: 'HrKpiInfoItemCategory',
-                  component: () => import('../../../views/HR/KPI/Info/Item/table.vue'),
+                  component: () => import('/@/views/HR/KPI/Info/Item/category.vue'),
                   meta: {
                     title: t('routes.hr.kpi.info.item.category.index'),
                   },

@@ -132,6 +132,7 @@ export default {
     successText: '验证通过',
   },
   grid: {
+    pkName: 'ID',
     modCfmText: '确认保存修改操作？',
     fullscreen: '全屏',
     fullscreenExit: '退出全屏',
@@ -143,5 +144,9 @@ export default {
     moreExt: '更多格式',
     search: '搜索',
     allCols: '全部栏目',
+    createdBy: '创建人',
+    createdAt: '创建时间',
+    updatedBy: '修改人',
+    updatedAt: '修改时间',
   },
 };

@@ -127,6 +127,7 @@ export default {
     successText: 'Verified',
   },
   grid: {
+    pkName: 'ID',
     modCfmText: 'Are you sure to save the modification?',
     fullscreen: 'Fullscreen',
     fullscreenExit: 'Exit Fullscreen',
@@ -138,5 +139,9 @@ export default {
     moreExt: 'More Ext',
     search: 'Search',
     allCols: 'All Columns',
+    createdBy: 'Created By',
+    createdAt: 'Created Time',
+    updatedBy: 'Updated By',
+    updatedAt: 'Updated Time',
   },
 };

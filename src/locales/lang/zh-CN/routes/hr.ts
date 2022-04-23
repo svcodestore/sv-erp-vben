@@ -1,5 +1,11 @@
 export default {
   dept: '人资部',
+  components: {
+    skeleton: {
+      allCode: '全部项',
+      mainVersion: '主版本',
+    },
+  },
   kpi: {
     index: '绩效管理',
     info: {

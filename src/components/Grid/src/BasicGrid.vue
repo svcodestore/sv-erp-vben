@@ -1,5 +1,5 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" style="margin-bottom: 5px">
+  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" style="margin: 5px 0">
     <template #toolbar>
       <slot name="toolbar">
         <Toolbar
