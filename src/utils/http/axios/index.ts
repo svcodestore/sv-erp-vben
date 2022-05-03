@@ -88,7 +88,7 @@ const transform: AxiosTransform = {
     const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
 
     if (joinPrefix) {
-      config.url = `${urlPrefix}${config.url}`;
+      config.url = `${urlPrefix || ''}${config.url}`;
     }
 
     if (apiUrl && isString(apiUrl)) {
