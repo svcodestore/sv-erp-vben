@@ -11,11 +11,20 @@ import { defineStore } from 'pinia';
 import { store } from '/@/store';
 
 import { ThemeEnum } from '/@/enums/appEnum';
-import { APP_DARK_MODE_KEY_, PROJ_CFG_KEY } from '/@/enums/cacheEnum';
+import {
+  APP_DARK_MODE_KEY_,
+  CLIENT_ID,
+  PROJ_CFG_KEY,
+  REDIRECT_URIS,
+  LOGIN_URIS,
+} from '/@/enums/cacheEnum';
 import { Persistent } from '/@/utils/cache/persistent';
 import { darkMode } from '/@/settings/designSetting';
 import { resetRouter } from '/@/router';
 import { deepMerge } from '/@/utils';
+import { getAuthCache, setAuthCache } from '/@/utils/auth';
+
+import { getCurrentAppliction } from '/@/api/sys/app';
 
 interface AppState {
   darkMode?: ThemeEnum;
@@ -25,6 +34,9 @@ interface AppState {
   projectConfig: ProjectConfig | null;
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState;
+  clientId?: Nullable<string>;
+  redirectUris?: Nullable<string>;
+  loginUris?: Nullable<string>;
 }
 let timeId: TimeoutHandle;
 export const useAppStore = defineStore({
@@ -34,6 +46,9 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: Persistent.getLocal(PROJ_CFG_KEY),
     beforeMiniInfo: {},
+    clientId: undefined,
+    redirectUris: undefined,
+    loginUris: undefined,
   }),
   getters: {
     getPageLoading(): boolean {
@@ -62,6 +77,15 @@ export const useAppStore = defineStore({
     },
     getMultiTabsSetting(): MultiTabsSetting {
       return this.getProjectConfig.multiTabsSetting;
+    },
+    getClientId(): string {
+      return this.clientId || getAuthCache(CLIENT_ID);
+    },
+    getRedirectUris(): string {
+      return this.redirectUris || getAuthCache(REDIRECT_URIS);
+    },
+    getLoginUris(): string {
+      return this.loginUris || getAuthCache(LOGIN_URIS);
     },
   },
   actions: {
@@ -98,6 +122,24 @@ export const useAppStore = defineStore({
         this.setPageLoading(loading);
         clearTimeout(timeId);
       }
+    },
+    setClientId(id?: Nullable<string>) {
+      this.clientId = id;
+      setAuthCache(CLIENT_ID, id);
+    },
+    setRedirectUris(uris?: Nullable<string>) {
+      this.redirectUris = uris;
+      setAuthCache(REDIRECT_URIS, uris);
+    },
+    setLoginUris(uris?: Nullable<string>) {
+      this.loginUris = uris;
+      setAuthCache(LOGIN_URIS, uris);
+    },
+    async initCurrentApplication() {
+      const app = await getCurrentAppliction();
+      this.setClientId(app.clientId);
+      this.setRedirectUris(app.redirectUris);
+      this.setLoginUris(app.loginUris);
     },
   },
 });
