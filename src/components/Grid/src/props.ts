@@ -39,8 +39,8 @@ export const gridBasicProps = {
   showHeader: { type: Boolean as PropType<boolean>, default: () => true },
   highlightCurrentRow: { type: Boolean as PropType<boolean>, default: () => true },
   highlightHoverRow: { type: Boolean as PropType<boolean>, default: () => true },
-  showOverflow: { type: Boolean as PropType<boolean>, default: () => true },
-  showHeaderOverflow: { type: Boolean as PropType<boolean>, default: () => true },
+  showOverflow: { type: Boolean as PropType<boolean>, default: () => false },
+  showHeaderOverflow: { type: Boolean as PropType<boolean>, default: () => false },
   rowId: { type: String as PropType<string>, default: () => 'id' },
   keepSource: { type: Boolean as PropType<boolean>, default: () => true },
   mouseConfig: {
@@ -58,7 +58,7 @@ export const gridBasicProps = {
   maxHeight: [Number, String],
   size: String,
   loading: Boolean,
-  align: String,
+  align: { type: String as PropType<string>, default: () => 'left' },
   headerAlign: String,
   footerAlign: String,
   highlightCurrentColumn: Boolean,
@@ -107,7 +107,7 @@ export const gridBasicProps = {
 };
 
 const gridCustomProps = {
-  title: {
+  gridTitle: {
     type: String as PropType<string>,
   },
   desc: {
@@ -157,6 +157,19 @@ const gridCustomProps = {
     type: Boolean as PropType<boolean>,
     default: () => false,
   },
+  simplicityColumns: {
+    type: Object as PropType<{
+      include?: string[];
+      exclude: string[];
+    }>,
+    default: () => ({
+      exclude: ['id', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'],
+    }),
+  },
+  fullHieight: {
+    type: Boolean as PropType<boolean>,
+    default: () => true,
+  },
 };
 
 export const toolbarCustomProps = {
@@ -165,9 +178,26 @@ export const toolbarCustomProps = {
     type: Object as PropType<InsertOptionsType>,
     default: () => undefined,
   },
+  simplicityColumns: {
+    type: Object as PropType<{
+      include?: string[];
+      exclude?: string[];
+    }>,
+    default: () => ({
+      exclude: ['id', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'],
+    }),
+  },
 };
 
 const toolbarProps = {
+  gridTitle: {
+    type: String as PropType<string>,
+    default: () => undefined,
+  },
+  desc: {
+    type: String as PropType<string>,
+    default: () => undefined,
+  },
   grid: {
     type: Object as PropType<VxeGridInstance>,
     default: () => undefined,

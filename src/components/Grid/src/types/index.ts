@@ -1,3 +1,4 @@
+import { ComputedRef, Ref } from 'vue';
 import type { VxeGridProps, VxeGridInstance, VxeTableDefines, VxeGridPropTypes } from 'vxe-table';
 
 interface InsertOptionsType {
@@ -9,17 +10,26 @@ type SaveApiType = <T>(modifications: GridModificationApiType) => Promise<T>;
 
 type ToolBarCustomType = Partial<{
   saveApi: SaveApiType;
-  insertOptions: InsertOptionsType;
-  title: string;
+  insertOptions: Partial<InsertOptionsType>;
+  gridTitle: string;
   desc: string;
 }>;
 
-type ToolBarType = ToolBarCustomType & {
-  grid: VxeGridInstance;
+type ToolBarType<T = any> = ToolBarCustomType & {
+  gridTitle?: string;
+  desc?: string;
+  grid: Ref<VxeGridInstance>;
   gridEmit: EmitType;
   gridCurrentRow: any;
-  gridOriginalData: any[];
-  gridWrappedColumns: GridColumnType[] | VxeGridPropTypes.Columns;
+  gridOriginalData: Ref<T[] | undefined>;
+  gridWrappedColumns: ComputedRef<GridColumnType[] | VxeGridPropTypes.Columns | undefined>;
+  simplicityColumns?: SimplicityColumnsType;
+};
+
+type SimplicityColumnsType = {
+  include?: string[];
+  excludeAppend?: string[];
+  exclude?: string[];
 };
 
 type GridCustomType = Partial<{
@@ -34,10 +44,12 @@ type GridCustomType = Partial<{
   seachable: boolean;
   draggable: boolean;
   reactable: boolean;
+  fullHeight: boolean;
+  simplicityColumns: SimplicityColumnsType;
 }>;
 
-type GridPropsType = ToolBarCustomType &
-  VxeGridProps &
+type GridPropsType<T = any> = ToolBarCustomType &
+  VxeGridProps<T> &
   GridCustomType &
   Partial<{ columns: GridColumnType[] }>;
 
@@ -52,13 +64,13 @@ type GridModificationType = {
 type GridModificationFmtType = Partial<{
   insert: modItemType[];
   update: modItemType[];
-  remove: { [key: string]: modItemType[] };
+  remove: string[];
 }>;
 
 type GridModificationApiType = Partial<{
   A: modItemType[];
   U: modItemType[];
-  D: { [key: string]: modItemType[] };
+  D: string[];
 }>;
 
 enum GridModeEnum {
@@ -92,4 +104,5 @@ export {
   GridModeEnum,
   GridModeType,
   GridColumnType,
+  SimplicityColumnsType,
 };

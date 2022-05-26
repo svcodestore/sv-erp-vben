@@ -1,24 +1,26 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" style="margin: 5px 0">
+  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1">
     <template #toolbar>
       <slot name="toolbar">
-        <Toolbar
-          ref="toolbar"
-          style="margin-bottom: 2px"
-          v-bind="toolbarAttrs"
-          @remove="unsetCurrentRow"
-          @revert="unsetCurrentRow"
-          @search="handleFilterData"
-        >
+        <Toolbar ref="toolbar" class="mb-2px">
+          <template #left>
+            <slot name="toolbarLeft">
+              <ToolbarLeft
+                v-bind="toolbarAttrs"
+                @remove="unsetCurrentRow"
+                @revert="unsetCurrentRow"
+              />
+            </slot>
+          </template>
           <template #center>
-            <div class="toolbar-center-container">
-              <slot name="toolbarCenter">
-                <Tooltip placement="top" :title="desc" v-if="desc">
-                  <span v-if="title">{{ title }}</span>
-                </Tooltip>
-                <span v-if="title">{{ title }}</span>
-              </slot>
-            </div>
+            <slot name="toolbarCenter">
+              <ToolbarCenter v-bind="toolbarAttrs" />
+            </slot>
+          </template>
+          <template #right>
+            <slot name="toolbarRight">
+              <ToolbarRight v-bind="toolbarAttrs" @search="handleFilterData" />
+            </slot>
           </template>
         </Toolbar>
       </slot>
@@ -56,16 +58,15 @@
 <script lang="ts" setup>
   import { ref, computed, watch, reactive } from 'vue';
   import type { VxeGridInstance } from 'vxe-table';
-  import { Tooltip } from 'ant-design-vue';
-  import { Toolbar } from './components/toolbar';
+
+  import { Toolbar, ToolbarLeft, ToolbarRight, ToolbarCenter } from './components/toolbar';
   import { getFilteredData, getWrappedColumns, getGridData, getColumnSlots } from './helper';
 
   import gridProps from './props';
-  import { GridPropsType, ToolBarType } from './types';
+  import { GridPropsType } from './types';
   import { cloneDeep } from 'lodash-es';
 
   const emit = defineEmits(['refresh', 'current-change']);
-
   const xGrid = ref({} as VxeGridInstance);
   const toolbar = ref({});
 
@@ -83,9 +84,13 @@
   const filterStr = ref('');
 
   const attrs = computed(() => {
-    const wrap = Object.assign({}, props, {
+    let wrap = Object.assign({}, props, {
       columns: wrappedColumns.value,
     });
+    if (props.fullHieight) {
+      // @ts-ignore
+      wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
+    }
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
         data: gridData.value,
@@ -113,17 +118,17 @@
 
   const wrappedColumns = getWrappedColumns(props as GridPropsType);
 
-  const toolbarAttrs = reactive<ToolBarType>({
-    // @ts-ignore
+  const toolbarAttrs = reactive({
+    gridTitle: props.gridTitle,
+    desc: props.desc,
     grid: xGrid,
     gridEmit: emit,
     gridCurrentRow: currentRow,
-    // @ts-ignore
     gridOriginalData: originalData,
-    // @ts-ignore
     gridWrappedColumns: wrappedColumns || [],
     saveApi: props.saveApi,
     insertOptions: props.insertOptions,
+    simplicityColumns: props.simplicityColumns,
   });
 
   const currentChangeEvent = ({
@@ -166,15 +171,3 @@
     name: 'SvGrid',
   });
 </script>
-
-<style lang="less" scoped>
-  .toolbar-center-container {
-    width: 100%;
-    text-align: center;
-    line-height: 32px;
-    font-size: 16px;
-    white-space: nowrap;
-    letter-spacing: 5px;
-    color: black;
-  }
-</style>
