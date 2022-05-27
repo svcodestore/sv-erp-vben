@@ -87,10 +87,10 @@
     let wrap = Object.assign({}, props, {
       columns: wrappedColumns.value,
     });
-    if (props.fullHieight) {
-      // @ts-ignore
-      wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
-    }
+    // if (props.fullHieight) {
+    //   // @ts-ignore
+    //   wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
+    // }
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
         data: gridData.value,
