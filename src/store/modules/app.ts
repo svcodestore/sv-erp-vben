@@ -1,3 +1,4 @@
+import { APP_ID } from './../../enums/cacheEnum';
 import type {
   ProjectConfig,
   HeaderSetting,
@@ -34,6 +35,7 @@ interface AppState {
   projectConfig: ProjectConfig | null;
   // When the window shrinks, remember some states, and restore these states when the window is restored
   beforeMiniInfo: BeforeMiniState;
+  id?: Nullable<string>;
   clientId?: Nullable<string>;
   redirectUris?: Nullable<string>;
   loginUris?: Nullable<string>;
@@ -46,6 +48,7 @@ export const useAppStore = defineStore({
     pageLoading: false,
     projectConfig: Persistent.getLocal(PROJ_CFG_KEY),
     beforeMiniInfo: {},
+    id: undefined,
     clientId: undefined,
     redirectUris: undefined,
     loginUris: undefined,
@@ -77,6 +80,9 @@ export const useAppStore = defineStore({
     },
     getMultiTabsSetting(): MultiTabsSetting {
       return this.getProjectConfig.multiTabsSetting;
+    },
+    getId(): string {
+      return this.id || getAuthCache(APP_ID);
     },
     getClientId(): string {
       return this.clientId || getAuthCache(CLIENT_ID);
@@ -123,6 +129,10 @@ export const useAppStore = defineStore({
         clearTimeout(timeId);
       }
     },
+    setId(id?: Nullable<string>) {
+      this.id = id;
+      setAuthCache(APP_ID, id);
+    },
     setClientId(id?: Nullable<string>) {
       this.clientId = id;
       setAuthCache(CLIENT_ID, id);
@@ -137,6 +147,8 @@ export const useAppStore = defineStore({
     },
     async initCurrentApplication() {
       const app = await getCurrentAppliction();
+
+      this.setId(app.id);
       this.setClientId(app.clientId);
       this.setRedirectUris(app.redirectUris);
       this.setLoginUris(app.loginUris);

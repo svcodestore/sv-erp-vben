@@ -5,6 +5,10 @@ import { getParentLayout, LAYOUT, EXCEPTION_COMPONENT } from '/@/router/constant
 import { cloneDeep, omit } from 'lodash-es';
 import { warn } from '/@/utils/log';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { Menu } from '/@/api/sys/model/menuModel';
+import { useI18n } from '/@/hooks/web/useI18n';
+
+const { t } = useI18n();
 
 export type LayoutMapKey = 'LAYOUT';
 const IFRAME = () => import('/@/views/sys/iframe/FrameBlank.vue');
@@ -161,4 +165,49 @@ function isMultipleRoute(routeModule: AppRouteModule) {
     }
   }
   return flag;
+}
+
+export function toRouteItems(
+  menus: Menu[],
+  routeItems: AppRouteRecordRaw[],
+  pid = '0',
+  parentPath = '',
+) {
+  menus.forEach((menu) => {
+    if (menu.pid === pid) {
+      let p = '';
+      if (parentPath) {
+        p = (parentPath.endsWith('/') ? parentPath : parentPath + '/') + menu.path;
+      } else {
+        p = menu.path;
+      }
+      const route: AppRouteRecordRaw = {
+        name: menu.code,
+        path: p,
+        component: menu.component || 'LAYOUT',
+        meta: {
+          orderNo: menu.sortNo,
+          icon: menu.icon,
+          title: t('routes.menu.' + menu.code),
+        },
+      };
+      menu.redirect && (route.redirect = menu.redirect);
+      route.children = [];
+      toRouteItems(menus, route.children, menu.id, route.path);
+      if (route.children && route.children.length < 1) {
+        delete route.children;
+      }
+      routeItems.push(route);
+    }
+  });
+}
+
+export function sortRouteItems(routeItems: AppRouteRecordRaw[]) {
+  routeItems.sort((a, b) => Number(a.meta?.orderNo) - Number(b.meta?.orderNo));
+
+  routeItems.forEach((item) => {
+    if (item.children) {
+      sortRouteItems(item.children);
+    }
+  });
 }

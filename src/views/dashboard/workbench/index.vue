@@ -1,3 +1,3 @@
 <template>
-  <div> workbench </div>
+  <div></div>
 </template>

@@ -4,6 +4,8 @@ export const REFRESH_TOKEN_KEY = 'REFRESH__TOKEN__';
 
 export const CLIENT_ID = 'CLIENT_ID__';
 
+export const APP_ID = 'APP_ID__';
+
 export const REDIRECT_URIS = 'REDIRECT_URIS__';
 
 export const LOGIN_URIS = 'LOGIN_URIS__';

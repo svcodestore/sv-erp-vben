@@ -4,7 +4,7 @@ import { store } from '/@/store';
 import { RoleEnum } from '/@/enums/roleEnum';
 import { ROLES_KEY, ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_INFO_KEY } from '/@/enums/cacheEnum';
 import { getAuthCache, setAuthCache, goSsoLogin } from '/@/utils/auth';
-import { doLogout, getUserInfo } from '/@/api/sys/user';
+import { doLogout, getCurrentUser } from '/@/api/sys/user';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useMessage } from '/@/hooks/web/useMessage';
 import { h } from 'vue';
@@ -80,15 +80,10 @@ export const useUserStore = defineStore({
       this.roleList = [];
       this.sessionTimeout = false;
     },
-    async getUserInfoAction(): Promise<UserInfo | null> {
-      if (!this.getAccessToken) return null;
-      const userInfo = await getUserInfo();
-      this.setUserInfo(userInfo);
-      return userInfo;
+    async initCurrentUser() {
+      const user = await getCurrentUser();
+      this.setUserInfo(user);
     },
-    /**
-     * @description: logout
-     */
     async logout(goLogin = false) {
       if (this.getAccessToken) {
         try {
@@ -105,10 +100,6 @@ export const useUserStore = defineStore({
         goSsoLogin();
       }
     },
-
-    /**
-     * @description: Confirm before logging out
-     */
     confirmLoginOut() {
       const { createConfirm } = useMessage();
       const { t } = useI18n();

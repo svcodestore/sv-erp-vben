@@ -20,7 +20,7 @@ import { getCommonStoragePrefix, getStorageShortName } from '/@/utils/env';
 import { primaryColor } from '../../build/config/themeConfig';
 import { Persistent } from '/@/utils/cache/persistent';
 import { deepMerge } from '/@/utils';
-import { ThemeEnum } from '/@/enums/appEnum';
+import { PermissionModeEnum, ThemeEnum } from '/@/enums/appEnum';
 
 // Initial project configuration
 export function initAppConfigStore() {
@@ -48,6 +48,9 @@ export function initAppConfigStore() {
     console.log(error);
   }
   appStore.setProjectConfig(projCfg);
+  appStore.setProjectConfig({
+    permissionMode: PermissionModeEnum.BACK,
+  });
 
   // init dark mode
   updateDarkTheme(darkMode);

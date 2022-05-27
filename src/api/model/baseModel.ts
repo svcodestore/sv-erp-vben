@@ -25,3 +25,12 @@ export type User = {
   lang: string;
   status: boolean;
 } & ModificationFields;
+
+export type BaseFields = {
+  id: string;
+  status: boolean;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  updatedBy: string;
+};

@@ -33,7 +33,7 @@
 
   import { useUserStore } from '/@/store/modules/user';
   import { useLockStore } from '/@/store/modules/lock';
-  import headerImg from '/@/assets/images/header.jpg';
+
   export default defineComponent({
     name: 'LockModal',
     components: { BasicModal, BasicForm },
@@ -44,7 +44,7 @@
       const userStore = useUserStore();
       const lockStore = useLockStore();
 
-      const getRealName = computed(() => userStore.getUserInfo?.realName);
+      const getRealName = computed(() => userStore.getUserInfo?.name);
       const [register, { closeModal }] = useModalInner();
 
       const [registerForm, { validateFields, resetFields }] = useForm({
@@ -76,7 +76,7 @@
 
       const avatar = computed(() => {
         const { avatar } = userStore.getUserInfo;
-        return avatar || headerImg;
+        return avatar;
       });
 
       return {

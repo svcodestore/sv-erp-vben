@@ -5,24 +5,21 @@ import { store } from '/@/store';
 import { useI18n } from '/@/hooks/web/useI18n';
 import { useUserStore } from './user';
 import { useAppStoreWithOut } from './app';
-import { toRaw } from 'vue';
-import { transformObjToRoute, flatMultiLevelRoutes } from '/@/router/helper/routeHelper';
+import {
+  transformObjToRoute,
+  flatMultiLevelRoutes,
+  sortRouteItems,
+} from '/@/router/helper/routeHelper';
 import { transformRouteToMenu } from '/@/router/helper/menuHelper';
 
-import projectSetting from '/@/settings/projectSetting';
-
-import { PermissionModeEnum } from '/@/enums/appEnum';
-
-import { asyncRoutes } from '/@/router/routes';
-import { ERROR_LOG_ROUTE, PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
+import { PAGE_NOT_FOUND_ROUTE } from '/@/router/routes/basic';
 
 import { filter } from '/@/utils/helper/treeHelper';
-
-import { getMenuList } from '/@/api/sys/menu';
-import { getPermCode } from '/@/api/sys/user';
+import { toRouteItems } from '/@/router/helper/routeHelper';
 
 import { useMessage } from '/@/hooks/web/useMessage';
 import { PageEnum } from '/@/enums/pageEnum';
+import { getAuthMenuList } from '/@/api/sys/authorization';
 
 interface PermissionState {
   // Permission code list
@@ -93,24 +90,14 @@ export const usePermissionStore = defineStore({
       this.lastBuildMenuTime = 0;
     },
     async changePermissionCode() {
-      const codeList = await getPermCode();
+      const codeList = [];
       this.setPermCodeList(codeList);
     },
     async buildRoutesAction(): Promise<AppRouteRecordRaw[]> {
       const { t } = useI18n();
       const userStore = useUserStore();
       const appStore = useAppStoreWithOut();
-
       let routes: AppRouteRecordRaw[] = [];
-      const roleList = toRaw(userStore.getRoleList) || [];
-      const { permissionMode = projectSetting.permissionMode } = appStore.getProjectConfig;
-
-      const routeFilter = (route: AppRouteRecordRaw) => {
-        const { meta } = route;
-        const { roles } = meta || {};
-        if (!roles) return true;
-        return roleList.some((role) => roles.includes(role));
-      };
 
       const routeRemoveIgnoreFilter = (route: AppRouteRecordRaw) => {
         const { meta } = route;
@@ -126,7 +113,7 @@ export const usePermissionStore = defineStore({
         let homePath: string = userStore.getUserInfo.homePath || PageEnum.BASE_HOME;
         function patcher(routes: AppRouteRecordRaw[], parentPath = '') {
           if (parentPath) parentPath = parentPath + '/';
-          routes.forEach((route: AppRouteRecordRaw) => {
+          routes.forEach((route) => {
             const { path, children, redirect } = route;
             const currentPath = path.startsWith('/') ? path : parentPath + path;
             if (currentPath === homePath) {
@@ -148,65 +135,39 @@ export const usePermissionStore = defineStore({
         return;
       };
 
-      switch (permissionMode) {
-        case PermissionModeEnum.ROLE:
-          routes = filter(asyncRoutes, routeFilter);
-          routes = routes.filter(routeFilter);
-          // Convert multi-level routing to level 2 routing
-          routes = flatMultiLevelRoutes(routes);
-          break;
+      const { createMessage } = useMessage();
 
-        case PermissionModeEnum.ROUTE_MAPPING:
-          routes = filter(asyncRoutes, routeFilter);
-          routes = routes.filter(routeFilter);
-          const menuList = transformRouteToMenu(routes, true);
-          routes = filter(routes, routeRemoveIgnoreFilter);
-          routes = routes.filter(routeRemoveIgnoreFilter);
-          menuList.sort((a, b) => {
-            return (a.meta?.orderNo || 0) - (b.meta?.orderNo || 0);
-          });
+      createMessage.loading({
+        content: t('sys.app.menuLoading'),
+        duration: 0.3,
+      });
 
-          this.setFrontMenuList(menuList);
-          // Convert multi-level routing to level 2 routing
-          routes = flatMultiLevelRoutes(routes);
-          break;
-
-        //  If you are sure that you do not need to do background dynamic permissions, please comment the entire judgment below
-        case PermissionModeEnum.BACK:
-          const { createMessage } = useMessage();
-
-          createMessage.loading({
-            content: t('sys.app.menuLoading'),
-            duration: 1,
-          });
-
-          // !Simulate to obtain permission codes from the background,
-          // this function may only need to be executed once, and the actual project can be put at the right time by itself
-          let routeList: AppRouteRecordRaw[] = [];
-          try {
-            this.changePermissionCode();
-            routeList = (await getMenuList()) as AppRouteRecordRaw[];
-          } catch (error) {
-            console.error(error);
-          }
-
-          // Dynamically introduce components
-          routeList = transformObjToRoute(routeList);
-
-          //  Background routing to menu structure
-          const backMenuList = transformRouteToMenu(routeList);
-          this.setBackMenuList(backMenuList);
-
-          // remove meta.ignoreRoute item
-          routeList = filter(routeList, routeRemoveIgnoreFilter);
-          routeList = routeList.filter(routeRemoveIgnoreFilter);
-
-          routeList = flatMultiLevelRoutes(routeList);
-          routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
-          break;
+      // obtain permission codes from the background
+      let routeList: AppRouteRecordRaw[] = [];
+      try {
+        this.changePermissionCode();
+        const menus = await getAuthMenuList(appStore.getId, userStore.getUserInfo.id);
+        toRouteItems(menus, routeList);
+        routeList = routeList[0]?.children || [];
+        sortRouteItems(routeList);
+      } catch (error) {
+        console.error(error);
       }
 
-      routes.push(ERROR_LOG_ROUTE);
+      // Dynamically introduce components
+      routeList = transformObjToRoute(routeList);
+
+      //  Background routing to menu structure
+      const backMenuList = transformRouteToMenu(routeList);
+      this.setBackMenuList(backMenuList);
+
+      // remove meta.ignoreRoute item
+      routeList = filter(routeList, routeRemoveIgnoreFilter);
+      routeList = routeList.filter(routeRemoveIgnoreFilter);
+
+      routeList = flatMultiLevelRoutes(routeList);
+      routes = [PAGE_NOT_FOUND_ROUTE, ...routeList];
+
       patchHomeAffix(routes);
       return routes;
     },

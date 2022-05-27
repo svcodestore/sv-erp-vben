@@ -28,9 +28,13 @@
       <div :class="`${prefixCls}-entry`" v-show="!showDate">
         <div :class="`${prefixCls}-entry-content`">
           <div :class="`${prefixCls}-entry__header enter-x`">
-            <img :src="userinfo.avatar || headerImg" :class="`${prefixCls}-entry__header-img`" />
+            <img
+              v-if="userinfo.avatar"
+              :src="userinfo.avatar"
+              :class="`${prefixCls}-entry__header-img`"
+            />
             <p :class="`${prefixCls}-entry__header-name`">
-              {{ userinfo.realName }}
+              {{ userinfo.name }}
             </p>
           </div>
           <InputPassword
@@ -85,7 +89,6 @@
   import { useNow } from './useNow';
   import { useDesign } from '/@/hooks/web/useDesign';
   import { LockOutlined } from '@ant-design/icons-vue';
-  import headerImg from '/@/assets/images/header.jpg';
 
   const InputPassword = Input.Password;
 

@@ -2,6 +2,7 @@ import { Persistent, BasicKeys } from '/@/utils/cache/persistent';
 import { CacheTypeEnum } from '/@/enums/cacheEnum';
 import projectSetting from '/@/settings/projectSetting';
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from '/@/enums/cacheEnum';
+import { useAppStoreWithOut } from '/@/store/modules/app';
 
 const { permissionCacheType } = projectSetting;
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL;
@@ -30,12 +31,19 @@ export function clearAuthCache(immediate = true) {
 }
 
 export function goSsoLogin() {
-  const origin = window.location.origin;
-  const authPath = import.meta.env.VITE_SSO_API_URL;
+  const appStore = useAppStoreWithOut();
+  const authPath = appStore.getLoginUris;
+  const clientId = appStore.getClientId;
+  const callbackPath = appStore.getRedirectUris;
+
+  if (!authPath || !clientId || !callbackPath) {
+    return;
+  }
+
   const authSearchParams = new URLSearchParams();
   authSearchParams.append('response_type', 'code');
-  authSearchParams.append('client_id', '60f9bd80d01913d3c74e');
-  authSearchParams.append('redirect_uri', new URL('/callback', origin).toString());
+  authSearchParams.append('client_id', clientId);
+  authSearchParams.append('redirect_uri', callbackPath);
   authSearchParams.append('scope', 'read');
   const authHref = authPath + authSearchParams.toString();
   window.location.href = authHref;
