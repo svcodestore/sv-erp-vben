@@ -7,4 +7,6 @@ export default {
   ProdSchedule: 'Schedule Plan',
   ProdScheduleMonthView: 'Month View',
   ProdScheduleDayView: 'Day View',
+  BusinessDepartment: 'Business Dept',
+  OrderShipTracing: 'Order Ship Tracing',
 };

@@ -7,4 +7,6 @@ export default {
   ProdSchedule: '排程计划',
   ProdScheduleMonthView: '月看板',
   ProdScheduleDayView: '日看板',
+  BusinessDepartment: '业务部',
+  OrderShipTracing: '订单出库追踪',
 };
