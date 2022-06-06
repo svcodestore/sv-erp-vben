@@ -1,6 +1,13 @@
 <template>
   <Header />
-  <div style="font-size: 22px"> 行事历设定： <Calendar :date="date" /></div>
+  <div style="font-size: 22px">
+    行事历设定：
+    <Calendar :date="date">
+      <template #cellContent="cellDate">
+        {{ cellDate?.date?.format('YYYY/MM/DD') }}
+      </template>
+    </Calendar>
+  </div>
   <table
     v-for="(tb, i) in tableData"
     :key="i"

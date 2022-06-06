@@ -5,6 +5,8 @@ export default {
     view: {
       month: {
         index: '月看板',
+        prodLine8: '制八线皮带',
+        prodLine9: '制八线皮夹',
       },
       day: {
         index: '日看板',

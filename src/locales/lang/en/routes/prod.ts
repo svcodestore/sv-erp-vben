@@ -5,6 +5,8 @@ export default {
     view: {
       month: {
         index: 'Month View',
+        prodLine8: 'Prod Line 8 - Belt',
+        prodLine9: 'Prod Line 9 - Wallet',
       },
       day: {
         index: 'Day View',

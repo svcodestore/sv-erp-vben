@@ -7,7 +7,8 @@ export default {
   delText: 'Delete',
   resetText: 'Reset',
   searchText: 'Search',
-  queryText: 'Search',
+  queryText: 'Query',
+  printText: 'Print',
 
   inputText: 'Please enter',
   chooseText: 'Please choose',

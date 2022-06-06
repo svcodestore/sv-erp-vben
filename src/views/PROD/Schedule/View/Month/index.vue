@@ -17,15 +17,17 @@
           <DatePicker v-model:value="formState.date" picker="month" :allowClear="false" />
         </FormItem>
         <FormItem>
-          <Button type="primary" htmlType="submit" :loading="state.loading">查询</Button>
+          <Button type="primary" htmlType="submit" :loading="state.loading">
+            {{ t('common.queryText') }}
+          </Button>
         </FormItem>
         <FormItem v-if="state.data.length">
-          <Button type="primary" ghost @click="handlePrint">打印</Button>
+          <Button type="primary" ghost @click="handlePrint">{{ t('common.printText') }}</Button>
         </FormItem>
       </Form>
     </div>
 
-    <div id="report" class="bg-white mt-4">
+    <div id="report" class="bg-white mt-4" v-if="state.data.length">
       <Report :data="state.data" :date="formState.date" />
     </div>
   </PageWrapper>
@@ -59,11 +61,11 @@
     loading: false,
     workLines: [
       {
-        label: '制八线皮带',
+        label: t('routes.prod.schedule.view.month.prodLine8'),
         value: 'N',
       },
       {
-        label: '制九线皮夹',
+        label: t('routes.prod.schedule.view.month.prodLine9'),
         value: 'V',
       },
     ],
