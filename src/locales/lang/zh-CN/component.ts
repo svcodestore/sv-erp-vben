@@ -148,5 +148,6 @@ export default {
     createdAt: '创建时间',
     updatedBy: '修改人',
     updatedAt: '修改时间',
+    simpCol: '简约列',
   },
 };

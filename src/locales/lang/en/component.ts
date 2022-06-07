@@ -143,5 +143,6 @@ export default {
     createdAt: 'Created Time',
     updatedBy: 'Updated By',
     updatedAt: 'Updated Time',
+    simpCol: 'Simplicity Column',
   },
 };
