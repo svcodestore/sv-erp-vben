@@ -117,6 +117,14 @@ const gridCustomProps = {
     type: String as PropType<GridModeType>,
     default: () => GridModeEnum.TOOLBAR,
   },
+  showToolbar: {
+    type: Boolean as PropType<Boolean>,
+    default: () => true,
+  },
+  readonly: {
+    type: Boolean as PropType<Boolean>,
+    default: () => false,
+  },
   editable: {
     type: Boolean as PropType<boolean>,
     default: () => false,

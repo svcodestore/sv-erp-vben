@@ -2,7 +2,7 @@
   <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1">
     <template #toolbar>
       <slot name="toolbar">
-        <Toolbar ref="toolbar" class="mb-2px">
+        <Toolbar ref="toolbar" class="mb-2px" v-if="showToolbar">
           <template #left>
             <slot name="toolbarLeft">
               <ToolbarLeft
@@ -87,10 +87,10 @@
     let wrap = Object.assign({}, props, {
       columns: wrappedColumns.value,
     });
-    // if (props.fullHieight) {
-    //   // @ts-ignore
-    //   wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
-    // }
+    if (props.fullHieight) {
+      // @ts-ignore
+      wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
+    }
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
         data: gridData.value,
@@ -106,17 +106,17 @@
     };
   });
 
-  const columnSlots = getColumnSlots(props as GridPropsType);
+  const columnSlots = getColumnSlots(props as unknown as GridPropsType);
 
   const handleFilterData = (str: string) => {
     filterStr.value = str;
   };
 
-  const filteredData = getFilteredData(filterStr, props as GridPropsType);
+  const filteredData = getFilteredData(filterStr, props as unknown as GridPropsType);
 
-  const gridData = getGridData(props as GridPropsType, filteredData);
+  const gridData = getGridData(props as unknown as GridPropsType, filteredData);
 
-  const wrappedColumns = getWrappedColumns(props as GridPropsType);
+  const wrappedColumns = getWrappedColumns(props as unknown as GridPropsType);
 
   const toolbarAttrs = reactive({
     gridTitle: props.gridTitle,
