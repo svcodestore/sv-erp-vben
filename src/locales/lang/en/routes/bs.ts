@@ -10,6 +10,7 @@ export default {
     cargoNo: 'Cargo No.',
     customerNo: 'Customer No.',
     location: 'Company Location',
+    ship: 'Ship',
     grid: {
       column: {
         titles: {

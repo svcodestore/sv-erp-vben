@@ -4,12 +4,13 @@ export default {
     desc: ' 检索条件订单的出库情况，订单数据来源于ERP',
     company: {
       svdg: '东莞斯达文星',
-      jstw: '台中杰士通',
+      jstw: '台湾杰士通',
     },
     orderNo: '客户单号',
     cargoNo: '存货编号',
     customerNo: '客商编号',
     location: '地点公司',
+    ship: '出货',
     grid: {
       column: {
         titles: {

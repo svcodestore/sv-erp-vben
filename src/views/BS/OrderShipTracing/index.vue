@@ -7,18 +7,38 @@
     <div class="py-4 bg-white flex flex-col justify-center items-center">
       <Form layout="inline" :model="formState" @finish="handleFinish">
         <FormItem :label="t('routes.bs.orderShipTracing.orderNo')">
-          <Input v-model:value="formState.KhPONo" class="width130px" />
+          <Input
+            allowClear
+            v-model:value="formState.KhPONo"
+            class="width130px"
+            autofocus
+            @change="state.isShowGrid = false"
+          />
         </FormItem>
         <FormItem :label="t('routes.bs.orderShipTracing.cargoNo')">
-          <Input v-model:value="formState.spNo" class="width130px" />
+          <Input
+            allowClear
+            v-model:value="formState.spNo"
+            class="width130px"
+            @change="state.isShowGrid = false"
+          />
         </FormItem>
         <FormItem :label="t('routes.bs.orderShipTracing.customerNo')">
-          <Input v-model:value="formState.khNo" class="width130px" />
+          <Input
+            allowClear
+            v-model:value="formState.khNo"
+            class="width130px"
+            @change="state.isShowGrid = false"
+          />
         </FormItem>
         <FormItem :label="t('routes.bs.orderShipTracing.location')">
-          <Select v-model:value="formState.company" class="width130px">
-            <SelectOption v-for="line in state.companies" :key="line.value">
-              {{ line.label }}
+          <Select
+            v-model:value="formState.company"
+            class="width130px"
+            @change="state.isShowGrid = false"
+          >
+            <SelectOption v-for="company in state.companies" :key="company.value">
+              {{ company.label }}
             </SelectOption>
           </Select>
         </FormItem>
@@ -35,9 +55,27 @@
       </Form>
     </div>
 
-    <div class="bg-white mt-4">
-      <sv-grid v-bind="gridOptions" />
-    </div>
+    <sv-grid class="mt-4" v-bind="gridOptions" v-if="state.isShowGrid">
+      <template #dingDanShuLiang="{ row, column }">
+        <span class="order-numeric order-numeric__bolder order-numeric__bolder-black">
+          {{ toThousandthDigit(row[column.property]) }}
+        </span>
+      </template>
+      <template #leiJiChuHuo="{ row, column }">
+        <span class="order-numeric order-numeric__bolder order-numeric__tooltip">
+          {{ toThousandthDigit(row[column.property]) }}
+        </span>
+      </template>
+      <template #detail="{ rowIndex }">
+        <ul class="order-detail" v-if="state.orderDetails[rowIndex]">
+          <li v-for="(item, idx) in state.orderDetails[rowIndex]" :key="idx">
+            {{ item.danCiChuHuoShiJian }} {{ t('routes.bs.orderShipTracing.ship') }}
+            <i>{{ toThousandthDigit(item.danCiChuHuo) }}</i>
+          </li>
+        </ul>
+        <Spin v-if="state.orderDetailsLoading" />
+      </template>
+    </sv-grid>
   </PageWrapper>
 </template>
 
@@ -48,13 +86,18 @@
   import { PageWrapper } from '/@/components/Page';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
-  import { getOrders } from '/@/api/BS/OrderShipTracing';
+  import { getOrderDetails, getOrders } from '/@/api/BS/OrderShipTracing';
+  import { debounce, objArrUniq } from '/@/utils/helper';
+  import { dateUtil } from '/@/utils/dateUtil';
+  import { Spin } from 'ant-design-vue';
+  import { toThousandthDigit } from '/@/utils/strUtils';
 
   const { t } = useI18n();
 
   const state = reactive({
-    headerData: {},
-    data: [],
+    isShowGrid: false,
+    orderDetailsLoading: false,
+    orderDetails: [] as any[],
     loading: false,
     companies: [
       {
@@ -67,22 +110,35 @@
       },
     ],
   });
-
-  const columnDateFilter = ({ value, row, column }) => {
-    if (value) {
-      return row[column.property].indexOf(value) > -1;
-    } else {
-      return row[column.property] == value;
-    }
-  };
+  const formState = reactive({
+    KhPONo: '',
+    spNo: '',
+    khNo: '',
+    company: '1',
+  });
 
   const gridOptions = reactive<GridPropsType>({
     data: [],
+    loading: false,
     showToolbar: false,
+    class: 'order-ship-tracing-grid',
+    rowClassName({ row }) {
+      if (row.leiJiChuHuo < 1) {
+        return 'not-shipped-row';
+      }
+      if (row.leiJiChuHuo < row.dingDanShuLiang) {
+        return 'not-finish-shipped-row';
+      }
+    },
     columns: [
       {
-        field: 'SC_Name',
+        type: 'seq',
+        width: 80,
+      },
+      {
+        field: 'SCName',
         title: t('routes.bs.orderShipTracing.grid.column.titles.categories'),
+        sortable: true,
         width: 100,
         align: 'center',
       },
@@ -90,16 +146,12 @@
         field: 'dingDanShiJian',
         title: t('routes.bs.orderShipTracing.grid.column.titles.orderTime'),
         sortable: true,
-        filters: [],
-        filterMethod: columnDateFilter,
         width: 140,
       },
       {
         field: 'jiHuaJiaoQi',
         title: t('routes.bs.orderShipTracing.grid.column.titles.planDate'),
         sortable: true,
-        filters: [],
-        filterMethod: columnDateFilter,
         width: 140,
       },
       {
@@ -161,29 +213,106 @@
     ],
   });
 
-  const formState = reactive({
-    KhPONo: '',
-    spNo: '',
-    khNo: '',
-    company: '1',
-  });
-  const handleFinish: FormProps['onFinish'] = () => {
+  function fmtData(data) {
+    const fmtData = objArrUniq(data).map((item) => {
+      item.dingDanShiJian &&
+        (item.dingDanShiJian = dateUtil(item.dingDanShiJian).format('YYYY-MM-DD'));
+      item.jiHuaJiaoQi && (item.jiHuaJiaoQi = dateUtil(item.jiHuaJiaoQi).format('YYYY-MM-DD'));
+      item.dingDanShuLiang && (item.dingDanShuLiang = Number(item.dingDanShuLiang).toFixed());
+      item.leiJiChuHuo && (item.leiJiChuHuo = Number(item.leiJiChuHuo).toFixed());
+
+      return item;
+    });
+
+    return fmtData;
+  }
+
+  const handleFinish: FormProps['onFinish'] = debounce(() => {
     state.loading = true;
-    getOrders({})
-      .then((res) => {
-        if (res.length) {
+    gridOptions.loading = true;
+
+    getOrders(formState)
+      .then((data) => {
+        gridOptions.data = fmtData(data);
+        if (data.length) {
+          state.isShowGrid = true;
+          Promise.all(
+            (gridOptions.data || []).map(({ OrdBID, cunHuoBianHao, KhPONo, smSOBPlusmyField12 }) =>
+              getOrderDetails({
+                OrdBIDs: OrdBID.map((id: string) => "'" + id + "'").join(','),
+                KhPONo,
+                khNo: smSOBPlusmyField12,
+                spNo: cunHuoBianHao,
+                company: formState.company,
+              }),
+            ),
+          ).then((res) => {
+            state.orderDetails = res.map((details) =>
+              [...new Set(details.map((e) => e.danCiChuHuoShiJian))].map((d: string) => {
+                return {
+                  danCiChuHuoShiJian: dateUtil(d).format('YYYY-MM-DD'),
+                  danCiChuHuo: details
+                    .filter((e) => e.danCiChuHuoShiJian === d)
+                    .map((e) => Number(e.danCiChuHuo))
+                    .reduce((curr, next) => curr + next, 0),
+                  data,
+                };
+              }),
+            );
+            state.orderDetailsLoading = false;
+          });
         } else {
+          state.isShowGrid = false;
+          useMessage().createMessage.info(t('common.noData'));
         }
       })
       .finally(() => {
-        useMessage().createMessage.info(t('common.noData'));
         state.loading = false;
+        gridOptions.loading = false;
       });
-  };
+  });
 </script>
 
-<style scoped>
+<style scoped lang="less">
   .width120px {
     width: 130px;
+  }
+
+  .order-ship-tracing-grid {
+    :deep(.not-shipped-row) {
+      background-color: #00000018 !important;
+    }
+
+    :deep(.not-finish-shipped-row) {
+      background-color: #0000000e !important;
+    }
+
+    .order-numeric__bolder {
+      font-weight: bolder;
+    }
+
+    .order-numeric__bolder-black {
+      color: black;
+    }
+
+    .order-numeric__tooltip {
+      display: inline-block;
+      width: 100%;
+    }
+
+    .order-detail {
+      margin: 0;
+      padding: 0;
+
+      li {
+        i {
+          color: black;
+        }
+      }
+
+      li:nth-of-type(n + 2) {
+        border-top: 1px dashed #d0d3d6;
+      }
+    }
   }
 </style>

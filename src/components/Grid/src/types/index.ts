@@ -34,6 +34,7 @@ type SimplicityColumnsType = {
 
 type GridCustomType = Partial<{
   mode: GridModeType;
+  class: string;
   showToolbar: boolean;
   readonly: boolean;
   editable: boolean;
