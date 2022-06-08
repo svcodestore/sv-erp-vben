@@ -1,5 +1,5 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1">
+  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1" v-loading="loading">
     <template #toolbar>
       <slot name="toolbar">
         <Toolbar ref="toolbar" class="mb-2px" v-if="showToolbar">
@@ -86,7 +86,9 @@
   const attrs = computed(() => {
     let wrap = Object.assign({}, props, {
       columns: wrappedColumns.value,
+      loading: undefined,
     });
+
     if (props.fullHieight) {
       const elem = document.querySelector('.vxe-grid')?.parentNode;
       // @ts-ignore
