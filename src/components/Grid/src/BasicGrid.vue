@@ -88,8 +88,23 @@
       columns: wrappedColumns.value,
     });
     if (props.fullHieight) {
+      const elem = document.querySelector('.vxe-grid')?.parentNode;
       // @ts-ignore
-      wrap = { ...wrap, height: document.querySelector('.vxe-grid')?.parentNode?.clientHeight };
+      let height: number = elem?.clientHeight;
+      console.log(height);
+      if (elem?.childNodes) {
+        for (const child of Array.from(elem.childNodes)) {
+          // @ts-ignore
+          const classList = child.classList;
+          if (!classList || !Array.from(classList).includes('vxe-grid')) {
+            // @ts-ignore
+            child.clientHeight && (height -= child.clientHeight);
+          }
+        }
+      }
+      console.log(height);
+
+      wrap = { ...wrap, height };
     }
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
