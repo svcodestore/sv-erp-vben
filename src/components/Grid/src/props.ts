@@ -23,7 +23,7 @@ export const gridBasicProps = {
   id: { type: String as PropType<string>, default: () => 'svGrid' },
   columns: { type: Array as PropType<GridColumnType[]>, default: () => [] },
   data: { type: Array as PropType<unknown[]> },
-  height: { type: Number as PropType<number>, default: () => 500 },
+  height: { type: Number as PropType<number>, default: () => null },
   autoResize: { type: Boolean as PropType<boolean>, default: () => true },
   syncResize: { type: Boolean as PropType<boolean>, default: () => true },
   resizable: { type: Boolean as PropType<boolean>, default: () => true },
@@ -176,7 +176,7 @@ const gridCustomProps = {
   },
   fullHieight: {
     type: Boolean as PropType<boolean>,
-    default: () => true,
+    default: () => false,
   },
 };
 

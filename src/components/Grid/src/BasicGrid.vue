@@ -91,7 +91,7 @@
       const elem = document.querySelector('.vxe-grid')?.parentNode;
       // @ts-ignore
       let height: number = elem?.clientHeight;
-      console.log(height);
+
       if (elem?.childNodes) {
         for (const child of Array.from(elem.childNodes)) {
           // @ts-ignore
@@ -102,7 +102,6 @@
           }
         }
       }
-      console.log(height);
 
       wrap = { ...wrap, height };
     }
