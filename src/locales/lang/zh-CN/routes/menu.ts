@@ -9,4 +9,5 @@ export default {
   ProdScheduleDayView: '日看板',
   BusinessDepartment: '业务部',
   OrderShipTracing: '订单出库追踪',
+  ZKTime: '中控考勤机',
 };
