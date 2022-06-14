@@ -13,6 +13,9 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { useOauthStore } from '/@/store/modules/oauth';
   import { useGo } from '/@/hooks/web/usePage';
+  import { PageEnum } from '/@/enums/pageEnum';
+  import { useUserStore } from '/@/store/modules/user';
+  const userStore = useUserStore();
   const oauthStore = useOauthStore();
 
   const { t } = useI18n();
@@ -30,7 +33,7 @@
     if (code > 0) {
       message.error(t(`auth.${msg}`));
     } else {
-      go('/dashboard');
+      go(userStore.getUserInfo.homePath || PageEnum.BASE_HOME);
     }
   });
 </script>
