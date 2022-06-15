@@ -14,14 +14,21 @@ export type ModificationFields = {
   updatedAt: string;
 };
 
+type HomePath = {
+  applicationId: string;
+  path: string;
+};
 export type User = {
   id: string;
   uuid: string;
   loginId: string;
   password: string;
   name: string;
+  avatar: string;
   phone: string;
   email: string;
+  gender: number;
+  homePath: HomePath;
   lang: string;
   status: boolean;
 } & ModificationFields;
