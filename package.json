@@ -69,7 +69,7 @@
     "vue-json-pretty": "^2.0.6",
     "vue-router": "^4.0.14",
     "vue-types": "^4.1.1",
-    "vxe-table": "^4.2.2-beta.1",
+    "vxe-table": "^4.2.7-beta.3",
     "xe-utils": "3",
     "xlsx": "^0.18.4"
   },
