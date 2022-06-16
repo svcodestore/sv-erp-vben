@@ -1,0 +1,1 @@
+<template>material stock</template>
