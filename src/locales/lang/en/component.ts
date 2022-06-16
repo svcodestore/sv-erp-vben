@@ -136,6 +136,7 @@ export default {
     printContent: 'Print Content',
     exportData: 'Export Data',
     excelExt: 'EXCEL',
+    wpsExt: 'WPS',
     moreExt: 'More Ext',
     search: 'Search',
     allCols: 'All Columns',

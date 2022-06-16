@@ -141,6 +141,7 @@ export default {
     printContent: '打印内容',
     exportData: '导出数据',
     excelExt: 'EXCEL',
+    wpsExt: 'WPS',
     moreExt: '更多格式',
     search: '搜索',
     allCols: '全部栏目',
