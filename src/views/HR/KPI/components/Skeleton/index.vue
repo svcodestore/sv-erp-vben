@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper contentFullHeight :title="props.title" :decription="props.description">
+  <PageWrapper contentFullHeight :title="title" :content="description">
     <div class="py-4 bg-white flex flex-col justify-center items-center">
       <Form layout="inline" :model="formState" @finish="handleFinish">
         <FormItem>
@@ -10,16 +10,16 @@
           </Select>
         </FormItem>
         <FormItem>
-          <Select v-model:value="formState.code" style="width: 140px">
-            <SelectOption v-for="line in state.codes" :key="line.value">
+          <Select v-model:value="formState.category" style="width: 140px">
+            <SelectOption v-for="line in state.categories" :key="line.value">
               {{ line.label }}
             </SelectOption>
           </Select>
         </FormItem>
         <FormItem>
-          <Button type="primary" htmlType="submit" :loading="props.loading">{{
-            t('common.queryText')
-          }}</Button>
+          <Button type="primary" htmlType="submit" :loading="loading">
+            {{ t('common.queryText') }}
+          </Button>
         </FormItem>
       </Form>
     </div>
@@ -31,14 +31,14 @@
 <script lang="ts" setup>
   import { Form, FormItem, Select, SelectOption, FormProps, Button } from 'ant-design-vue';
   import { reactive, UnwrapRef } from 'vue';
-  import { props as p } from './props';
+  import { props } from './props';
   import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { KpiRequestType } from '/@/api/HR/KPI/type';
 
   const emit = defineEmits(['form-finish']);
 
-  const props = defineProps(p);
+  defineProps(props);
 
   const { t } = useI18n();
 
@@ -49,7 +49,7 @@
         value: 'main',
       },
     ],
-    codes: [
+    categories: [
       {
         label: t('routes.hr.components.skeleton.allCode'),
         value: 'all',
@@ -58,10 +58,10 @@
   });
 
   const formState: UnwrapRef<KpiRequestType> = reactive({
-    code: 'all',
+    category: 'all',
     version: 'main',
   });
   const handleFinish: FormProps['onFinish'] = () => {
-    emit('form-finish');
+    emit('form-finish', formState);
   };
 </script>

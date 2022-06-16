@@ -12,6 +12,7 @@ import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
   Items = '/hr/items',
+  SaveItemsBatch = '/hr/items/batch',
   ItemCategories = '/hr/item-categories',
   Titles = '/hr/titles',
   TitleCategories = '/hr/title-categories',
@@ -22,6 +23,10 @@ enum Api {
 
 export function getAllItem(params: KpiRequestType) {
   return defHttp.get<ItemType[]>({ url: Api.Items, params });
+}
+
+export function saveKpiItems(params) {
+  return defHttp.post({ url: Api.SaveItemsBatch, params });
 }
 
 export function getAllItemCategory(params: KpiRequestType) {

@@ -1,5 +1,5 @@
 export type KpiRequestType = {
-  code: string;
+  category: string;
   version: string;
 };
 
