@@ -87,7 +87,7 @@
     let wrap = Object.assign({}, props, {
       columns: wrappedColumns.value,
       loading: undefined,
-    });
+    }) as GridPropsType;
 
     if (props.fullHieight) {
       const elem = document.querySelector('.vxe-grid')?.parentNode;
@@ -107,6 +107,15 @@
 
       wrap = { ...wrap, height };
     }
+
+    if (gridData.value.length < 150) {
+      wrap.height = undefined;
+      wrap.showOverflow = false;
+      wrap.showHeaderOverflow = false;
+      wrap.scrollX = { enabled: false };
+      wrap.scrollY = { enabled: false };
+    }
+
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
         data: gridData.value,
