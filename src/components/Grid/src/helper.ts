@@ -161,7 +161,6 @@ export const useInsert = (props: ToolBarType) => (defaultRowValues?: Record<stri
     gridInstance.insert(insertRow).then(({ row }) => {
       const focusField = props.insertOptions?.focusField;
       focusField && gridInstance.setEditCell(row, focusField);
-      gridInstance.setCurrentRow(row);
     });
   }
 };
@@ -181,12 +180,10 @@ export const useRevert = (emit: EmitType, props: ToolBarType) => async () => {
 };
 
 const getDiffData = ({
-  rowId,
   originalData,
   columns,
   data: { insert, update, remove },
 }: {
-  rowId?: string;
   originalData: any[];
   columns: VxeTableDefines.ColumnInfo[];
   data: GridModificationType;
@@ -194,7 +191,7 @@ const getDiffData = ({
   const userStore = useUserStoreWithOut();
   const userId = userStore.getUserInfo.id;
   const operatorFields = ['createdBy', 'updatedBy'];
-  const timeFields = ['createdAt', 'updatedAt'];
+  const excludeFields = ['createdAt', 'updatedAt', '_X_ROW_CHILD', 'isTrusted'];
 
   const o: GridModificationFmtType = {
     insert: [],
@@ -207,14 +204,13 @@ const getDiffData = ({
     for (const key in item) {
       if (Object.prototype.hasOwnProperty.call(item, key)) {
         const element = item[key];
-        if (Array.isArray(element)) {
+        if (Array.isArray(element) && !excludeFields.includes(key)) {
           obj[key] = element.join(',');
         } else if (isObject(element)) {
           obj[key] = Object.assign({}, element).value;
         } else if (operatorFields.includes(key)) {
           obj[key] = userId;
-        } else if (key === rowId && element.startsWith('row_')) {
-        } else if (timeFields.includes(key)) {
+        } else if (excludeFields.includes(key)) {
         } else {
           const cellType = columns.find((c) => c.field === key)?.editRender?.cellType;
 
@@ -277,9 +273,7 @@ export const useGetGridMod = (props: ToolBarType) => () => {
     remove: unref(props.grid)?.getRemoveRecords() || [],
   };
 
-  const dataModification = fmtDiffData(
-    getDiffData({ rowId: unref(props.grid).rowConfig?.keyField, originalData, columns, data }),
-  );
+  const dataModification = fmtDiffData(getDiffData({ originalData, columns, data }));
 
   return dataModification;
 };

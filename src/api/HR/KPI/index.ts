@@ -19,6 +19,7 @@ enum Api {
   Ranks = '/hr/ranks',
   Positions = '/hr/positions',
   PositionGroups = '/hr/position-groups',
+  SavePositionGroupsBatch = '/hr/position-groups/batch',
 }
 
 export function getAllItem(params: KpiRequestType) {
@@ -47,6 +48,10 @@ export function getAllRank(params: KpiRequestType) {
 
 export function getAllPositionGroup(params: KpiRequestType) {
   return defHttp.get<PositionGroupType[]>({ url: Api.PositionGroups, params });
+}
+
+export function saveKpiPositionGroups(params) {
+  return defHttp.post({ url: Api.SavePositionGroupsBatch, params });
 }
 
 export function getAllPosition(params: KpiRequestType) {

@@ -18,7 +18,7 @@ type ToolBarCustomType = Partial<{
 type ToolBarType<T = any> = ToolBarCustomType & {
   gridTitle?: string;
   desc?: string;
-  grid: Ref<VxeGridInstance>;
+  grid: VxeGridInstance;
   gridEmit: EmitType;
   gridCurrentRow: any;
   gridOriginalData: Ref<T[] | undefined>;

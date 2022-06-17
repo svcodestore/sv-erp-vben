@@ -6,9 +6,14 @@
     <Button shape="circle" :title="t('common.undo')" @click="revert">
       <UndoOutlined />
     </Button>
-    <Button type="primary" shape="circle" :title="t('common.insert')" @click="insert">
-      <PlusOutlined />
-    </Button>
+    <Popover>
+      <template #content v-if="isShowInsertSubNode">
+        <Button @click="insertSubNode"> <SubnodeOutlined />添加子结点 </Button>
+      </template>
+      <Button type="primary" shape="circle" :title="t('common.insert')" @click="insert">
+        <PlusOutlined />
+      </Button>
+    </Popover>
     <Button
       type="primary"
       danger
@@ -46,7 +51,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, h } from 'vue';
+  import { ref, h, computed } from 'vue';
   import {
     ReloadOutlined,
     UndoOutlined,
@@ -54,8 +59,9 @@
     DeleteOutlined,
     SaveOutlined,
     SmileOutlined,
+    SubnodeOutlined,
   } from '@ant-design/icons-vue';
-  import { Button, Popconfirm, Space, notification } from 'ant-design-vue';
+  import { Button, Popconfirm, Space, notification, Popover } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ToolBarProps } from '../../props';
   import { ToolBarType } from '../../types';
@@ -78,7 +84,15 @@
   const saveBtnLoading = ref(false);
   const popconfirmDisabled = ref(true);
 
+  const isShowInsertSubNode = computed<boolean>(() => {
+    return !!props.gridCurrentRow.pid && !!props.grid.treeConfig;
+  });
+
   const insert = useInsert(props);
+
+  const insertSubNode = () => {
+    insert({ pid: props.gridCurrentRow.id });
+  };
 
   const remove = useRemove(emit, props);
 
