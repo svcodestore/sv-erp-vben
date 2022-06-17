@@ -152,7 +152,7 @@ export const useInsert = (props: ToolBarType) => () => {
     ?.insert(props.insertOptions?.defaultRowValues || {})
     .then(({ row }) => {
       const focusField = props.insertOptions?.focusField;
-      focusField && unref(props.grid).setActiveCell(row, focusField);
+      focusField && unref(props.grid).setEditCell(row, focusField);
     });
 };
 
@@ -171,10 +171,12 @@ export const useRevert = (emit: EmitType, props: ToolBarType) => async () => {
 };
 
 const getDiffData = ({
+  rowId,
   originalData,
   columns,
   data: { insert, update, remove },
 }: {
+  rowId?: string;
   originalData: any[];
   columns: VxeTableDefines.ColumnInfo[];
   data: GridModificationType;
@@ -200,6 +202,7 @@ const getDiffData = ({
           obj[key] = Object.assign({}, element).value;
         } else if (operatorFields.includes(key)) {
           obj[key] = userId;
+        } else if (key === rowId && element.startsWith('row_')) {
         } else {
           const cellType = columns.find((c) => c.field === key)?.editRender?.cellType;
 
@@ -260,7 +263,9 @@ export const useGetGridMod = (props: ToolBarType) => () => {
     remove: unref(props.grid)?.getRemoveRecords() || [],
   };
 
-  const dataModification = fmtDiffData(getDiffData({ originalData, columns, data }));
+  const dataModification = fmtDiffData(
+    getDiffData({ rowId: props.grid.value.rowId, originalData, columns, data }),
+  );
 
   return dataModification;
 };
