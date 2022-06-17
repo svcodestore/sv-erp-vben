@@ -184,6 +184,7 @@ const getDiffData = ({
   const userStore = useUserStoreWithOut();
   const userId = userStore.getUserInfo.id;
   const operatorFields = ['createdBy', 'updatedBy'];
+  const timeFields = ['createdAt', 'updatedAt'];
 
   const o: GridModificationFmtType = {
     insert: [],
@@ -203,6 +204,7 @@ const getDiffData = ({
         } else if (operatorFields.includes(key)) {
           obj[key] = userId;
         } else if (key === rowId && element.startsWith('row_')) {
+        } else if (timeFields.includes(key)) {
         } else {
           const cellType = columns.find((c) => c.field === key)?.editRender?.cellType;
 
@@ -264,7 +266,7 @@ export const useGetGridMod = (props: ToolBarType) => () => {
   };
 
   const dataModification = fmtDiffData(
-    getDiffData({ rowId: props.grid.value.rowId, originalData, columns, data }),
+    getDiffData({ rowId: unref(props.grid).rowConfig?.keyField, originalData, columns, data }),
   );
 
   return dataModification;

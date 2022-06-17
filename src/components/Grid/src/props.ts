@@ -43,6 +43,10 @@ export const gridBasicProps = {
   showOverflow: { type: Boolean as PropType<boolean>, default: () => true },
   showHeaderOverflow: { type: Boolean as PropType<boolean>, default: () => false },
   rowId: { type: String as PropType<string>, default: () => 'id' },
+  rowConfig: {
+    type: Object as PropType<VxeTablePropTypes.RowConfig>,
+    default: () => ({ keyField: 'id' }),
+  },
   keepSource: { type: Boolean as PropType<boolean>, default: () => true },
   mouseConfig: {
     type: Object as PropType<Partial<typeof mouseConfig>>,
