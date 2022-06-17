@@ -13,6 +13,7 @@ import {
 } from './types';
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { isObject } from '/@/utils/is';
+import { useUserStoreWithOut } from '/@/store/modules/user';
 
 export function getColumnsField(columns: VxeGridPropTypes.Columns) {
   return columns.map(({ children, field }) => (children ? getColumnsField(children) : field));
@@ -178,6 +179,10 @@ const getDiffData = ({
   columns: VxeTableDefines.ColumnInfo[];
   data: GridModificationType;
 }) => {
+  const userStore = useUserStoreWithOut();
+  const userId = userStore.getUserInfo.id;
+  const operatorFields = ['createdBy', 'updatedBy'];
+
   const o: GridModificationFmtType = {
     insert: [],
     update: [],
@@ -193,6 +198,8 @@ const getDiffData = ({
           obj[key] = element.join(',');
         } else if (isObject(element)) {
           obj[key] = Object.assign({}, element).value;
+        } else if (operatorFields.includes(key)) {
+          obj[key] = userId;
         } else {
           const cellType = columns.find((c) => c.field === key)?.editRender?.cellType;
 
