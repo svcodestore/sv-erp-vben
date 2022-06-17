@@ -12,7 +12,7 @@ import {
   ToolBarType,
 } from './types';
 import { formatToDateTime } from '/@/utils/dateUtil';
-import { isObject } from '/@/utils/is';
+import { isFunction, isObject } from '/@/utils/is';
 import { useUserStoreWithOut } from '/@/store/modules/user';
 
 export function getColumnsField(columns: VxeGridPropTypes.Columns) {
@@ -147,13 +147,23 @@ export const getGridVisibleData = (props: ToolBarType) =>
     }
   });
 
-export const useInsert = (props: ToolBarType) => () => {
-  unref(props.grid)
-    ?.insert(props.insertOptions?.defaultRowValues || {})
-    .then(({ row }) => {
+export const useInsert = (props: ToolBarType) => (defaultRowValues?: Record<string, any>) => {
+  const gridInstance = unref(props.grid);
+  if (gridInstance) {
+    let insertRow = {};
+    const propDefaultRowValues = props.insertOptions?.defaultRowValues;
+    if (isFunction(propDefaultRowValues)) {
+      insertRow = Object.assign(insertRow, propDefaultRowValues());
+    } else if (propDefaultRowValues) {
+      insertRow = Object.assign(insertRow, propDefaultRowValues);
+    }
+    insertRow = Object.assign(insertRow, defaultRowValues || {});
+    gridInstance.insert(insertRow).then(({ row }) => {
       const focusField = props.insertOptions?.focusField;
-      focusField && unref(props.grid).setEditCell(row, focusField);
+      focusField && gridInstance.setEditCell(row, focusField);
+      gridInstance.setCurrentRow(row);
     });
+  }
 };
 
 export const useRemove = (emit: EmitType, props: ToolBarType) => async () => {
