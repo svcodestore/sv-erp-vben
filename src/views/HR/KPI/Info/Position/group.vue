@@ -1,29 +1,56 @@
 <template>
-  <KpiSkeleton title="职务分组" @form-finish="handleFinish" :loading="state.loading">
-    <sv-grid v-bind="gridOptions" v-show="gridOptions.data?.length" />
+  <KpiSkeleton
+    title="职务分组表"
+    description="绩效职务组表格，绩效职务项所属范围"
+    @form-finish="handleFinish"
+    :loading="state.loading"
+  >
+    <!-- v-show="gridOptions.data?.length" -->
+    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish" />
   </KpiSkeleton>
 </template>
 
 <script lang="ts" setup>
   import KpiSkeleton from '../../components/Skeleton/index.vue';
   import { FormProps } from 'ant-design-vue';
-  import { reactive, UnwrapRef } from 'vue';
+  import { reactive } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { GridPropsType } from '/@/components/Grid/src/types';
   import { KpiRequestType } from '/@/api/HR/KPI/type';
-  import { getAllPositionGroup } from '/@/api/HR/KPI';
+  import { getAllPositionGroup, saveKpiPositionGroups } from '/@/api/HR/KPI';
   import { generateBaseColumns } from '/@/utils/grid/column';
 
   const { t } = useI18n();
 
   const gridOptions = reactive<GridPropsType>({
+    loading: false,
     data: [],
+    saveApi: saveKpiPositionGroups,
+    insertOptions: {
+      defaultRowValues: {
+        pid: 'row_0',
+      },
+      focusField: 'name',
+    },
+    simplicityColumns: {
+      excludeAppend: ['pid'],
+    },
+    treeConfig: {
+      transform: true,
+      expandAll: true,
+    },
+    stripe: false,
     columns: generateBaseColumns({
       columns: [
         {
           field: 'name',
-          title: '职务组名',
+          title: '名称',
+          editRender: {
+            name: '$input',
+          },
+          align: 'center',
+          treeNode: true,
         },
       ],
     }),
@@ -33,18 +60,19 @@
     loading: false,
   });
 
-  const formState: UnwrapRef<KpiRequestType> = reactive({
-    code: 'all',
-    version: 'main',
-  });
-  const handleFinish: FormProps['onFinish'] = () => {
+  const handleFinish: FormProps['onFinish'] = (queries: KpiRequestType) => {
     state.loading = true;
-    getAllPositionGroup(formState).then((data) => {
-      gridOptions.data = data;
-      if (!data.length) {
-        useMessage().createMessage.info(t('common.noData'));
-      }
-      state.loading = false;
-    });
+    gridOptions.loading = true;
+    getAllPositionGroup(queries)
+      .then((data) => {
+        gridOptions.data = data;
+        if (!data.length) {
+          useMessage().createMessage.info(t('common.noData'));
+        }
+      })
+      .finally(() => {
+        state.loading = false;
+        gridOptions.loading = false;
+      });
   };
 </script>

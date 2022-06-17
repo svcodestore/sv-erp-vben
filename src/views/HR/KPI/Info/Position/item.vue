@@ -7,7 +7,7 @@
 <script lang="ts" setup>
   import KpiSkeleton from '../../components/Skeleton/index.vue';
   import { FormProps } from 'ant-design-vue';
-  import { reactive, UnwrapRef } from 'vue';
+  import { reactive } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { GridPropsType } from '/@/components/Grid/src/types';
@@ -18,12 +18,19 @@
   const { t } = useI18n();
 
   const gridOptions = reactive<GridPropsType>({
+    loading: false,
     data: [],
+    insertOptions: {
+      focusField: 'name',
+    },
     columns: generateBaseColumns({
       columns: [
         {
           field: 'name',
-          title: '职务名称',
+          title: '名称',
+          editRender: {
+            name: '$input',
+          },
         },
       ],
     }),
@@ -33,18 +40,19 @@
     loading: false,
   });
 
-  const formState: UnwrapRef<KpiRequestType> = reactive({
-    code: 'all',
-    version: 'main',
-  });
-  const handleFinish: FormProps['onFinish'] = () => {
+  const handleFinish: FormProps['onFinish'] = (queries: KpiRequestType) => {
     state.loading = true;
-    getAllPosition(formState).then((data) => {
-      gridOptions.data = data;
-      if (!data.length) {
-        useMessage().createMessage.info(t('common.noData'));
-      }
-      state.loading = false;
-    });
+    gridOptions.loading = true;
+    getAllPosition(queries)
+      .then((data) => {
+        gridOptions.data = data;
+        if (!data.length) {
+          useMessage().createMessage.info(t('common.noData'));
+        }
+      })
+      .finally(() => {
+        state.loading = false;
+        gridOptions.loading = false;
+      });
   };
 </script>
