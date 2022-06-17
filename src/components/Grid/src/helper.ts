@@ -229,7 +229,9 @@ const getDiffData = ({
           updateFields[key] = item[key].join(',');
         }
       } else {
-        if (item[key] !== originalItem[key]) {
+        if (key === 'updatedBy') {
+          updateFields[key] = userId;
+        } else if (item[key] !== originalItem[key]) {
           const v = item[key];
           updateFields[key] = col.editRender?.cellType === 'number' ? +v : v;
         }
