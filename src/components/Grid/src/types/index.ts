@@ -2,7 +2,7 @@ import { ComputedRef, Ref } from 'vue';
 import type { VxeGridProps, VxeGridInstance, VxeTableDefines, VxeGridPropTypes } from 'vxe-table';
 
 interface InsertOptionsType {
-  defaultRowValues: { [key: string]: any };
+  defaultRowValues: Record<string, any> | Fn;
   focusField: string;
 }
 
