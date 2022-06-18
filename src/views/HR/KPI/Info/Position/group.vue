@@ -5,8 +5,12 @@
     @form-finish="handleFinish"
     :loading="state.loading"
   >
-    <!-- v-show="gridOptions.data?.length" -->
-    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish" />
+    <sv-grid
+      class="mt-4"
+      v-bind="gridOptions"
+      @refresh="handleFinish"
+      v-show="gridOptions.data?.length"
+    />
   </KpiSkeleton>
 </template>
 
@@ -37,7 +41,6 @@
       excludeAppend: ['pid'],
     },
     treeConfig: {
-      transform: true,
       expandAll: true,
     },
     stripe: false,
