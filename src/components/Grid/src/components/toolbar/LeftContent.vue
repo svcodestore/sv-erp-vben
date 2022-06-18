@@ -6,7 +6,7 @@
     <Button shape="circle" :title="t('common.undo')" @click="revert">
       <UndoOutlined />
     </Button>
-    <Popover>
+    <Popover placement="bottom">
       <template #content v-if="isShowInsertSubNode">
         <Button @click="insertSubNode" :title="t('component.grid.addSubNodeDesc')">
           <SubnodeOutlined />{{ t('component.grid.addSubNode') }}

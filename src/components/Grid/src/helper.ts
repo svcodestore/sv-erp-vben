@@ -161,6 +161,16 @@ export const useInsert = (props: ToolBarType) => (defaultRowValues?: Record<stri
     insertRow = Object.assign(insertRow, defaultRowValues || {});
     gridInstance.insert(insertRow).then(({ row }) => {
       const focusField = props.insertOptions?.focusField;
+      if (props.grid.treeConfig) {
+        const gridData = gridInstance.getTableData().visibleData;
+        const parentRow = gridData.find((e) => e.id == row.pid);
+        if (parentRow) {
+          const isParentRowExpanded = gridInstance.isTreeExpandByRow(parentRow);
+          if (!isParentRowExpanded) {
+            gridInstance.setTreeExpand(parentRow, true);
+          }
+        }
+      }
       focusField && gridInstance.setEditCell(row, focusField);
     });
   }
@@ -187,15 +197,20 @@ const getDiffData = ({
   originalData,
   columns,
   data: { insert, update, remove },
+  excludeInsertFields,
 }: {
   originalData: any[];
   columns: VxeTableDefines.ColumnInfo[];
   data: GridModificationType;
+  excludeInsertFields?: string[];
 }) => {
   const userStore = useUserStoreWithOut();
   const userId = userStore.getUserInfo.id;
   const operatorFields = ['createdBy', 'updatedBy'];
-  const excludeFields = ['createdAt', 'updatedAt', '_X_ROW_CHILD', 'isTrusted'];
+  const excludeFields = ['createdAt', 'updatedAt', '_X_ROW_CHILD', 'isTrusted', 'children'];
+  if (excludeInsertFields) {
+    excludeFields.push(...excludeInsertFields);
+  }
 
   const o: GridModificationFmtType = {
     insert: [],
@@ -277,7 +292,15 @@ export const useGetGridMod = (props: ToolBarType) => () => {
     remove: unref(props.grid)?.getRemoveRecords() || [],
   };
 
-  const dataModification = fmtDiffData(getDiffData({ originalData, columns, data }));
+  const treeChildrenKey = props.grid.treeConfig?.children;
+  const excludeInsertFields: string[] = [];
+  if (treeChildrenKey) {
+    excludeInsertFields.push(treeChildrenKey);
+  }
+
+  const dataModification = fmtDiffData(
+    getDiffData({ originalData, columns, data, excludeInsertFields }),
+  );
 
   return dataModification;
 };
