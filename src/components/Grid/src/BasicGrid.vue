@@ -108,6 +108,7 @@
       wrap = { ...wrap, height };
     }
 
+    // 数据条目小于150不起用虚拟滚动
     if (gridData.value.length < 150) {
       wrap.height = undefined;
       wrap.showOverflow = false;
@@ -139,7 +140,7 @@
 
   const filteredData = getFilteredData(filterStr, props as unknown as GridPropsType);
 
-  const gridData = getGridData(props as unknown as GridPropsType, filteredData);
+  const gridData = getGridData(filteredData);
 
   const wrappedColumns = getWrappedColumns(props as unknown as GridPropsType);
 

@@ -1,7 +1,6 @@
 import { computed, Ref, ComputedRef, nextTick, unref } from 'vue';
 import * as XLSX from 'xlsx';
 import type { VxeGridPropTypes, VxeTableDefines, VxeTablePropTypes } from 'vxe-table';
-import { toArrayTree } from 'xe-utils';
 import {
   GridColumnType,
   GridModificationApiType,
@@ -14,6 +13,7 @@ import {
 import { formatToDateTime } from '/@/utils/dateUtil';
 import { isFunction, isObject } from '/@/utils/is';
 import { useUserStoreWithOut } from '/@/store/modules/user';
+import { toValueString } from 'xe-utils';
 
 export function getColumnsField(columns: VxeGridPropTypes.Columns) {
   return columns.map(({ children, field }) => (children ? getColumnsField(children) : field));
@@ -41,18 +41,24 @@ export const getFilteredData = (str: Ref<string>, props: GridPropsType) =>
   computed(() => {
     if (!str.value) return props.data || [];
 
+    const fileds = getColumnsField(props.columns || []).flat(Infinity);
+    const filterRE = new RegExp(str.value, 'gi');
     return (
       props.data?.filter((item) =>
-        getColumnsField(props.columns || [])
-          .flat(Infinity)
-          // @ts-ignore
+        fileds
           .filter((field) => !!item[field])
           .some(
             // @ts-ignore
             (field) => item[field]?.toString().toUpperCase().indexOf(str.value.toUpperCase()) > -1,
           ),
       ) || []
-    );
+    ).map((row) => {
+      const item = Object.assign({}, row);
+      fileds.forEach((field) => {
+        item[field] = toValueString(item[field]).replace(filterRE, (match) => `${match}`);
+      });
+      return item;
+    });
   });
 
 export const wrapColumns = (columns: GridColumnType[], props: GridPropsType) => {
@@ -121,12 +127,7 @@ export const getWrappedColumns = (props: GridPropsType) =>
     return props.columns;
   });
 
-export const getGridData = (props: GridPropsType, data: ComputedRef<unknown[]>) =>
-  computed(() => {
-    return props.treeConfig
-      ? toArrayTree(data.value, { key: 'id', parentKey: 'pid', children: 'children' })
-      : data.value;
-  });
+export const getGridData = (data: ComputedRef<unknown[]>) => computed(() => data.value);
 
 export const getColumnSlots = (props: GridPropsType) =>
   computed(() => {
@@ -171,6 +172,9 @@ export const useRemove = (emit: EmitType, props: ToolBarType) => async () => {
 };
 
 export const useRefresh = (props: ToolBarType) => () => {
+  if (props.grid.treeConfig) {
+    props.grid.setAllTreeExpand(true);
+  }
   props.gridEmit?.('refresh');
 };
 

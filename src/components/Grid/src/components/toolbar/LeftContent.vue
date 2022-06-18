@@ -8,7 +8,9 @@
     </Button>
     <Popover>
       <template #content v-if="isShowInsertSubNode">
-        <Button @click="insertSubNode"> <SubnodeOutlined />添加子结点 </Button>
+        <Button @click="insertSubNode" :title="t('component.grid.addSubNodeDesc')">
+          <SubnodeOutlined />{{ t('component.grid.addSubNode') }}
+        </Button>
       </template>
       <Button type="primary" shape="circle" :title="t('common.insert')" @click="insert">
         <PlusOutlined />
@@ -73,6 +75,7 @@
     useRevert,
     useValidateModification,
   } from '../../helper';
+  import { isNull, isUnDef } from '/@/utils/is';
 
   const { t } = useI18n();
 
@@ -85,7 +88,9 @@
   const popconfirmDisabled = ref(true);
 
   const isShowInsertSubNode = computed<boolean>(() => {
-    return !!props.gridCurrentRow.pid && !!props.grid.treeConfig;
+    const pid = props.gridCurrentRow.pid;
+
+    return !isNull(pid) && !isUnDef(pid) && !!props.grid.treeConfig;
   });
 
   const insert = useInsert(props);

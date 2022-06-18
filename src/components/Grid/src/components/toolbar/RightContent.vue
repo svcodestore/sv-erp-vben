@@ -6,19 +6,22 @@
     <Space>
       <ClickOutSide @click-outside="handleClickOutSide">
         <Input
-          class="bg-transparent"
-          style="width: 120px; box-shadow: none; border-left: 0; border-right: 0; border-top: 0"
+          id="grid-search-input"
+          style="
+            width: 120px;
+            box-shadow: none;
+            border-left: 0;
+            border-right: 0;
+            border-top: 0;
+            background-color: transparent;
+          "
           :placeholder="t('component.grid.search')"
           v-model:value="filterStr"
           v-if="isShowFilterInput"
           @change="emit('search', filterStr)"
         />
       </ClickOutSide>
-      <Button
-        shape="circle"
-        :title="t('component.grid.search')"
-        @click="isShowFilterInput = !isShowFilterInput"
-      >
+      <Button shape="circle" :title="t('component.grid.search')" @click="handleSearchClick">
         <SearchOutlined />
       </Button>
     </Space>
@@ -87,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, computed, UnwrapRef } from 'vue';
+  import { ref, onMounted, computed, UnwrapRef, nextTick } from 'vue';
   import {
     ExpandOutlined,
     CompressOutlined,
@@ -180,6 +183,13 @@
 
   const handleClickOutSide = () => {
     isShowFilterInput.value = false;
+  };
+
+  const handleSearchClick = () => {
+    isShowFilterInput.value = true;
+    nextTick(() => {
+      document.getElementById('grid-search-input')?.focus();
+    });
   };
 
   defineExpose({ getGridMod });

@@ -93,7 +93,7 @@ export const gridBasicProps = {
   checkConfig: Object,
   tooltipConfig: Object,
   expandConfig: Object,
-  treeConfig: Object,
+  treeConfig: Object as PropType<VxeTablePropTypes.TreeConfig>,
   menuConfig: Object,
   validConfig: Object,
   editRules: Object,
