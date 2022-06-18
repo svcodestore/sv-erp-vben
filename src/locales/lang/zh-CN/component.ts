@@ -150,5 +150,7 @@ export default {
     updatedBy: '修改人',
     updatedAt: '修改时间',
     simpCol: '简约列',
+    addSubNode: '添加子结点',
+    addSubNodeDesc: '添加子结点，向当前行添加一个子项',
   },
 };

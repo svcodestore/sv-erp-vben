@@ -145,5 +145,7 @@ export default {
     updatedBy: 'Updated By',
     updatedAt: 'Updated Time',
     simpCol: 'Simplicity Column',
+    addSubNode: 'Add sub node',
+    addSubNodeDesc: 'Add sub node, insert child node to current row',
   },
 };
