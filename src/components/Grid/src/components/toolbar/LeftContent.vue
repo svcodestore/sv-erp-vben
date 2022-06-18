@@ -53,17 +53,16 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, h, computed } from 'vue';
+  import { ref, computed } from 'vue';
   import {
     ReloadOutlined,
     UndoOutlined,
     PlusOutlined,
     DeleteOutlined,
     SaveOutlined,
-    SmileOutlined,
     SubnodeOutlined,
   } from '@ant-design/icons-vue';
-  import { Button, Popconfirm, Space, notification, Popover } from 'ant-design-vue';
+  import { Button, Popconfirm, Space, Popover } from 'ant-design-vue';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { ToolBarProps } from '../../props';
   import { ToolBarType } from '../../types';
@@ -76,6 +75,7 @@
     useValidateModification,
   } from '../../helper';
   import { isNull, isUnDef } from '/@/utils/is';
+  import { useMessage } from '/@/hooks/web/useMessage';
 
   const { t } = useI18n();
 
@@ -120,10 +120,7 @@
       await props
         .saveApi(getGridMod())
         .then(() => {
-          notification.success({
-            message: t('common.saveSucc'),
-            icon: h(SmileOutlined, { style: 'color: #108ee9' }),
-          });
+          useMessage().createMessage.success(t('common.saveSucc'));
           refresh();
         })
         .finally(() => {
