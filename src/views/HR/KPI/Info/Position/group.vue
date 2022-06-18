@@ -5,12 +5,7 @@
     @form-finish="handleFinish"
     :loading="state.loading"
   >
-    <sv-grid
-      class="mt-4"
-      v-bind="gridOptions"
-      @refresh="handleFinish"
-      v-show="gridOptions.data?.length"
-    />
+    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish" />
   </KpiSkeleton>
 </template>
 
@@ -33,7 +28,7 @@
     saveApi: saveKpiPositionGroups,
     insertOptions: {
       defaultRowValues: {
-        pid: 'row_0',
+        pid: '0',
       },
       focusField: 'name',
     },
@@ -41,7 +36,10 @@
       excludeAppend: ['pid'],
     },
     treeConfig: {
+      transform: true,
       expandAll: true,
+      rowField: 'id',
+      parentField: 'pid',
     },
     stripe: false,
     columns: generateBaseColumns({

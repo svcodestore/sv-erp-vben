@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
   import { Form, FormItem, Select, SelectOption, FormProps, Button } from 'ant-design-vue';
-  import { reactive, UnwrapRef } from 'vue';
+  import { onMounted, reactive, UnwrapRef } from 'vue';
   import { props } from './props';
   import { PageWrapper } from '/@/components/Page';
   import { useI18n } from '/@/hooks/web/useI18n';
@@ -64,4 +64,8 @@
   const handleFinish: FormProps['onFinish'] = () => {
     emit('form-finish', formState);
   };
+
+  onMounted(() => {
+    handleFinish(formState);
+  });
 </script>
