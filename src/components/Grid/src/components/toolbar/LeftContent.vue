@@ -8,7 +8,12 @@
     </Button>
     <Popover placement="bottom">
       <template #content v-if="isShowInsertSubNode">
-        <Button @click="insertSubNode" :title="t('component.grid.addSubNodeDesc')">
+        <Button
+          type="primary"
+          ghost
+          :title="t('component.grid.addSubNodeDesc')"
+          @click="insertSubNode"
+        >
           <SubnodeOutlined />{{ t('component.grid.addSubNode') }}
         </Button>
       </template>
@@ -16,16 +21,23 @@
         <PlusOutlined />
       </Button>
     </Popover>
-    <Button
-      type="primary"
-      danger
-      shape="circle"
-      :title="t('common.delText')"
-      @click="remove"
-      :disabled="!Object.keys(gridCurrentRow).length"
-    >
-      <DeleteOutlined />
-    </Button>
+    <Popover placement="bottom">
+      <template #content v-if="isShowDelMulti">
+        <Button danger type="ghost" :title="t('component.grid.delMultiDesc')" @click="removeMulti">
+          <DeleteOutlined />{{ t('component.grid.delMulti') }}
+        </Button>
+      </template>
+      <Button
+        type="primary"
+        danger
+        shape="circle"
+        :title="t('common.delText')"
+        @click="remove"
+        :disabled="isDisableDel"
+      >
+        <DeleteOutlined />
+      </Button>
+    </Popover>
     <Popconfirm
       :title="t('component.grid.modCfmText')"
       :ok-text="t('common.confirm')"
@@ -93,6 +105,17 @@
     return !isNull(pid) && !isUnDef(pid) && !!props.grid.treeConfig;
   });
 
+  const isDisableDel = computed<boolean>(() => {
+    return (
+      !Object.keys(props.gridCurrentRow || {}).length &&
+      !(props?.grid || {}).getCheckboxRecords?.().length
+    );
+  });
+
+  const isShowDelMulti = computed<boolean>(() => {
+    return (props?.grid || {}).getCheckboxRecords?.().length > 1;
+  });
+
   const insert = useInsert(props);
 
   const insertSubNode = () => {
@@ -100,6 +123,10 @@
   };
 
   const remove = useRemove(emit, props);
+
+  const removeMulti = () => {
+    props.grid?.remove((props?.grid || {}).getCheckboxRecords());
+  };
 
   const validateModificationWrap = async () => {
     popconfirmDisabled.value = true;

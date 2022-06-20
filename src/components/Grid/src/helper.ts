@@ -140,16 +140,16 @@ export const getColumnSlots = (props: GridPropsType) =>
 
 export const getGridVisibleData = (props: ToolBarType) =>
   computed(() => {
-    if (!unref(props.grid)) return [];
+    if (!props.grid) return [];
     try {
-      return unref(props.grid).getTableData().visibleData;
+      return props.grid.getTableData().visibleData;
     } catch (e) {
       return [];
     }
   });
 
 export const useInsert = (props: ToolBarType) => (defaultRowValues?: Record<string, any>) => {
-  const gridInstance = unref(props.grid);
+  const gridInstance = props.grid;
   if (gridInstance) {
     let insertRow = {};
     const propDefaultRowValues = props.insertOptions?.defaultRowValues;
@@ -177,8 +177,8 @@ export const useInsert = (props: ToolBarType) => (defaultRowValues?: Record<stri
 };
 
 export const useRemove = (emit: EmitType, props: ToolBarType) => async () => {
-  await unref(props.grid)?.remove(props.gridCurrentRow);
-  emit('remove');
+  await props.grid?.remove(props.gridCurrentRow);
+  emit('remove', props.gridCurrentRow);
 };
 
 export const useRefresh = (props: ToolBarType) => () => {
@@ -189,7 +189,7 @@ export const useRefresh = (props: ToolBarType) => () => {
 };
 
 export const useRevert = (emit: EmitType, props: ToolBarType) => async () => {
-  await unref(props.grid)?.revertData();
+  await props.grid?.revertData();
   emit('revert');
 };
 
@@ -230,6 +230,8 @@ const getDiffData = ({
         } else if (operatorFields.includes(key)) {
           obj[key] = userId;
         } else if (excludeFields.includes(key)) {
+        } else if (['id', 'pid'].includes(key) && String(element).startsWith('row_')) {
+          obj[key] = (element as string).slice(4);
         } else {
           const cellType = columns.find((c) => c.field === key)?.editRender?.cellType;
 
@@ -285,13 +287,13 @@ const fmtDiffData = ({
 
 export const useGetGridMod = (props: ToolBarType) => () => {
   const originalData = unref(props.gridOriginalData) || [];
-  const columns = Array.from(unref(props.grid)?.getTableColumn().collectColumn || []);
+  const columns = Array.from(props.grid?.getTableColumn().collectColumn || []);
   const data: GridModificationType = {
-    insert: unref(props.grid)?.getInsertRecords() || [],
-    update: unref(props.grid)?.getUpdateRecords() || [],
-    remove: unref(props.grid)?.getRemoveRecords() || [],
+    insert: props.grid?.getInsertRecords() || [],
+    update: props.grid?.getUpdateRecords() || [],
+    remove: props.grid?.getRemoveRecords() || [],
   };
-
+  console.log(props.grid.getCheckboxRecords(true));
   const treeChildrenKey = props.grid.treeConfig?.children;
   const excludeInsertFields: string[] = [];
   if (treeChildrenKey) {
@@ -306,9 +308,7 @@ export const useGetGridMod = (props: ToolBarType) => () => {
 };
 
 export const useValidateModification = (props: ToolBarType) => async (): Promise<boolean> => {
-  const errMap = await unref(props.grid)
-    ?.fullValidate()
-    .catch((errMap) => errMap);
+  const errMap = await props.grid?.fullValidate().catch((errMap) => errMap);
   if (errMap) return false;
 
   const { A, U, D } = useGetGridMod(props)();
@@ -326,10 +326,10 @@ export function getColKey(columns: GridColumnType[]): any[] {
 }
 
 export const useVisibleColumnCheck = (props: ToolBarType) => (keys: string[]) => {
-  // if (!unref(props.grid).getTableColumn) return [];
+  // if (!props.grid.getTableColumn) return [];
 
   nextTick().then(() => {
-    const columns = unref(props.grid).getTableColumn().fullColumn;
+    const columns = props.grid.getTableColumn().fullColumn;
     if (keys.length === 0) {
       for (const col of columns) {
         col.visible = false;
@@ -361,10 +361,10 @@ export const useVisibleColumnCheck = (props: ToolBarType) => (keys: string[]) =>
         }
       });
     }
-    unref(props.grid).refreshColumn();
+    props.grid.refreshColumn();
   });
 
-  // unref(props.grid).refreshColumn();
+  // props.grid.refreshColumn();
 };
 
 export const useSimplicityColumnsChange = (props: ToolBarType) => async (checked: boolean) => {
@@ -404,12 +404,12 @@ export const getAllColKeys = (props: ToolBarType) =>
     .concat('root');
 
 export const useOpenPrint = (props: ToolBarType) => (options?: VxeTablePropTypes.PrintConfig) => {
-  unref(props.grid).openPrint(options);
+  props.grid.openPrint(options);
 };
 
 export const useExportAsWps = (props: ToolBarType) => () => {
   const filename = formatToDateTime();
-  unref(props.grid)
+  props.grid
     .exportData({
       type: 'html',
       mode: 'all',
@@ -418,7 +418,7 @@ export const useExportAsWps = (props: ToolBarType) => () => {
     .then((res) => {
       const dom = new DOMParser().parseFromString(res.content, 'text/html');
       dom.querySelector('table')?.setAttribute('border', '1');
-      unref(props.grid).saveFile({
+      props.grid.saveFile({
         filename,
         type: 'xlsx',
         content: dom.documentElement.innerHTML,
@@ -428,7 +428,7 @@ export const useExportAsWps = (props: ToolBarType) => () => {
 
 export const useExportAsExcel = (props: ToolBarType) => () => {
   const filename = formatToDateTime();
-  unref(props.grid)
+  props.grid
     .exportData({
       type: 'html',
       mode: 'all',
@@ -445,5 +445,5 @@ export const useExportAsExcel = (props: ToolBarType) => () => {
 };
 
 export const useOpenExport = (props: ToolBarType) => (options?: VxeTablePropTypes.ExportConfig) => {
-  unref(props.grid).openExport(options);
+  props.grid.openExport(options);
 };

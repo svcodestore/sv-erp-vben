@@ -152,5 +152,7 @@ export default {
     simpCol: '简约列',
     addSubNode: '添加子结点',
     addSubNodeDesc: '添加子结点，向当前行添加一个子项',
+    delMulti: '删除多项',
+    delMultiDesc: '批量删除已选择的行',
   },
 };

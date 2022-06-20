@@ -147,5 +147,7 @@ export default {
     simpCol: 'Simplicity Column',
     addSubNode: 'Add sub node',
     addSubNodeDesc: 'Add sub node, insert child node to current row',
+    delMulti: 'Delete multiple',
+    delMultiDesc: 'Batch delete selected rows',
   },
 };
