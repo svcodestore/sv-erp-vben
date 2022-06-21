@@ -32,9 +32,6 @@
       },
       focusField: 'name',
     },
-    simplicityColumns: {
-      excludeAppend: ['pid'],
-    },
     treeConfig: {
       transform: true,
       expandAll: true,

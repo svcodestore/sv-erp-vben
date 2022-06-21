@@ -37,7 +37,16 @@ export type PositionGroupType = {
   version: string;
 } & BaseModelFields;
 
-export type PositionType = {
+export type PositionItemType = {
   name: string;
+  version: string;
+} & BaseModelFields;
+
+export type PositionType = {
+  itemId: number;
+  groupId: number;
+  kpiId: number;
+  categoryId: number;
+  scorePercent: number;
   version: string;
 } & BaseModelFields;

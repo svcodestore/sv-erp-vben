@@ -34,10 +34,11 @@
         {
           field: 'code',
           title: '项目号',
-          width: 120,
+          width: 100,
           editRender: {
             name: '$input',
           },
+          align: 'center',
         },
         {
           field: 'name',
@@ -45,6 +46,7 @@
           editRender: {
             name: '$input',
           },
+          align: 'center',
         },
       ],
     }),

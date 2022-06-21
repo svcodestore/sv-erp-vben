@@ -1,6 +1,11 @@
 <template>
-  <KpiSkeleton title="职务项" @form-finish="handleFinish" :loading="state.loading">
-    <sv-grid v-bind="gridOptions" v-show="gridOptions.data?.length" />
+  <KpiSkeleton
+    title="职务项"
+    description="职务项列表，给职务项分配职务组形成一个职务"
+    @form-finish="handleFinish"
+    :loading="state.loading"
+  >
+    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish" />
   </KpiSkeleton>
 </template>
 
@@ -12,7 +17,7 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { GridPropsType } from '/@/components/Grid/src/types';
   import { KpiRequestType } from '/@/api/HR/KPI/type';
-  import { getAllPosition } from '/@/api/HR/KPI';
+  import { getAllPositionItem, saveKpiPositionItemsBatch } from '/@/api/HR/KPI';
   import { generateBaseColumns } from '/@/utils/grid/column';
 
   const { t } = useI18n();
@@ -20,6 +25,7 @@
   const gridOptions = reactive<GridPropsType>({
     loading: false,
     data: [],
+    saveApi: saveKpiPositionItemsBatch,
     insertOptions: {
       focusField: 'name',
     },
@@ -31,6 +37,7 @@
           editRender: {
             name: '$input',
           },
+          align: 'center',
         },
       ],
     }),
@@ -43,7 +50,7 @@
   const handleFinish: FormProps['onFinish'] = (queries: KpiRequestType) => {
     state.loading = true;
     gridOptions.loading = true;
-    getAllPosition(queries)
+    getAllPositionItem(queries)
       .then((data) => {
         gridOptions.data = data;
         if (!data.length) {
