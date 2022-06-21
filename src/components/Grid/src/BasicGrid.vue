@@ -152,6 +152,7 @@
     gridCurrentRow: currentRow,
     gridOriginalData: originalData,
     gridWrappedColumns: wrappedColumns || [],
+    insertedReplace: props.insertedReplace,
     saveApi: props.saveApi,
     insertOptions: props.insertOptions,
     simplicityColumns: props.simplicityColumns,

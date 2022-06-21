@@ -9,6 +9,7 @@ interface InsertOptionsType {
 type SaveApiType = <T>(modifications: GridModificationApiType) => Promise<T>;
 
 type ToolBarCustomType = Partial<{
+  insertedReplace: (record: Record<string, any>) => Record<string, any>;
   saveApi: SaveApiType;
   insertOptions: Partial<InsertOptionsType>;
   gridTitle: string;
@@ -56,7 +57,7 @@ type GridPropsType<T = any> = ToolBarCustomType &
   GridCustomType &
   Partial<{ columns: GridColumnType[] }>;
 
-type modItemType = { [key: string]: any };
+type modItemType = Record<string, any>;
 
 type GridModificationType = {
   insert: modItemType[];

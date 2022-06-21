@@ -194,11 +194,13 @@ export const useRevert = (emit: EmitType, props: ToolBarType) => async () => {
 };
 
 const getDiffData = ({
+  props,
   originalData,
   columns,
   data: { insert, update, remove },
   excludeInsertFields,
 }: {
+  props: ToolBarType;
   originalData: any[];
   columns: VxeTableDefines.ColumnInfo[];
   data: GridModificationType;
@@ -220,6 +222,24 @@ const getDiffData = ({
 
   o.insert = insert.map((item) => {
     const obj: modItemType = {};
+
+    if (props.insertedReplace) {
+      const o = props.insertedReplace(item);
+      operatorFields.forEach((operatorField) => {
+        o[operatorField] = userId;
+      });
+      ['id', 'pid'].forEach((key) => {
+        if (String(o[key]).startsWith('row_')) {
+          o[key] = (o[key] as string).slice(4);
+        }
+      });
+      excludeFields.forEach((excludeField) => {
+        delete o[excludeField];
+      });
+
+      return o;
+    }
+
     for (const key in item) {
       if (Object.prototype.hasOwnProperty.call(item, key)) {
         const element = item[key];
@@ -239,6 +259,7 @@ const getDiffData = ({
         }
       }
     }
+
     return obj;
   });
 
@@ -293,7 +314,7 @@ export const useGetGridMod = (props: ToolBarType) => () => {
     update: props.grid?.getUpdateRecords() || [],
     remove: props.grid?.getRemoveRecords() || [],
   };
-  console.log(props.grid.getCheckboxRecords(true));
+
   const treeChildrenKey = props.grid.treeConfig?.children;
   const excludeInsertFields: string[] = [];
   if (treeChildrenKey) {
@@ -301,7 +322,7 @@ export const useGetGridMod = (props: ToolBarType) => () => {
   }
 
   const dataModification = fmtDiffData(
-    getDiffData({ originalData, columns, data, excludeInsertFields }),
+    getDiffData({ originalData, columns, data, excludeInsertFields, props }),
   );
 
   return dataModification;
