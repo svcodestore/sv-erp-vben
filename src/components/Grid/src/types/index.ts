@@ -10,6 +10,7 @@ type SaveApiType = <T>(modifications: GridModificationApiType) => Promise<T>;
 
 type ToolBarCustomType = Partial<{
   insertedReplace: (record: Record<string, any>) => Record<string, any>;
+  updatedReplace: (record: Record<string, any>) => Record<string, any>;
   saveApi: SaveApiType;
   insertOptions: Partial<InsertOptionsType>;
   gridTitle: string;

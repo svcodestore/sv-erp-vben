@@ -190,6 +190,9 @@ export const toolbarCustomProps = {
   insertedReplace: {
     type: Function as PropType<(record: Record<string, any>) => Record<string, any>>,
   },
+  updatedReplace: {
+    type: Function as PropType<(record: Record<string, any>) => Record<string, any>>,
+  },
   insertOptions: {
     type: Object as PropType<InsertOptionsType>,
     default: () => undefined,

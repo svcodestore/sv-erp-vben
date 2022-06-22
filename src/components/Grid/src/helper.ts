@@ -225,6 +225,7 @@ const getDiffData = ({
 
     if (props.insertedReplace) {
       const o = props.insertedReplace(item);
+
       operatorFields.forEach((operatorField) => {
         o[operatorField] = userId;
       });
@@ -266,7 +267,7 @@ const getDiffData = ({
   o.remove = remove.map((e) => e.id);
 
   update.forEach((item) => {
-    const updateFields = {};
+    const updatedRecord = {};
 
     const originalItem = originalData.find((e) => e.id === item.id) || {};
 
@@ -274,20 +275,23 @@ const getDiffData = ({
       const key = col.field || '';
       if (Array.isArray(item[key])) {
         if (item[key].toString() !== (originalItem[key] || []).toString()) {
-          updateFields[key] = item[key].join(',');
+          updatedRecord[key] = item[key].join(',');
         }
       } else {
         if (key === 'updatedBy') {
-          updateFields[key] = userId;
+          updatedRecord[key] = userId;
         } else if (item[key] !== originalItem[key]) {
           const v = item[key];
-          updateFields[key] = col.editRender?.cellType === 'number' ? +v : v;
+          updatedRecord[key] = col.editRender?.cellType === 'number' ? +v : v;
         }
       }
     });
 
-    if (Object.keys(updateFields).length) {
-      o.update?.push({ ...updateFields, id: item.id });
+    if (props.updatedReplace) {
+      props.updatedReplace(updatedRecord);
+    }
+    if (Object.keys(updatedRecord).length) {
+      o.update?.push({ ...updatedRecord, id: item.id });
     }
   });
 
