@@ -118,11 +118,18 @@
     return o;
   };
 
+  const updatedReplace = (record: PositionType) => {
+    record.groupId = +(record.groupId + '').split('. ')[0];
+
+    return record;
+  };
+
   const gridOptions = reactive<GridPropsType<PositionType>>({
     loading: false,
     align: 'center',
     data: [],
     insertedReplace,
+    updatedReplace,
     saveApi: saveKpiPositionsBatch,
     insertOptions: {
       focusField: 'groupId',
