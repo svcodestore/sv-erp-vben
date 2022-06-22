@@ -63,7 +63,7 @@
           placeholder="请选择绩效"
           style="width: 100%"
           :options="state.kpiItemOptions"
-          :filter-option="filterOption"
+          :filter-option="kpiFilterOption"
         />
       </template>
       <template #kpiCategory="{ row, column }">
@@ -252,7 +252,7 @@
     const kpiItems = await getAllItem(queries);
     state.kpiItems = kpiItems;
     state.kpiItemOptions = kpiItems.map((e) =>
-      Object.assign({}, e, { label: e.name, value: e.id }),
+      Object.assign({}, e, { label: `${e.code}. ${e.name}`, value: e.id }),
     );
 
     const kpiCategories = await getAllItemCategory(queries);
@@ -304,5 +304,9 @@
 
   const filterOption = (input: string, option: { name: string }) => {
     return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  };
+
+  const kpiFilterOption = (input: string, option: { name: string; code?: string }) => {
+    return (option.code + option.name).toLowerCase().indexOf(input.toLowerCase()) >= 0;
   };
 </script>
