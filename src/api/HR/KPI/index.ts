@@ -3,11 +3,11 @@ import {
   ItemType,
   TitleType,
   ItemCategoryType,
-  TitleCategoryType,
   RankType,
   PositionGroupType,
   PositionType,
   PositionItemType,
+  RankTitleType,
 } from './type';
 import { defHttp } from '/@/utils/http/axios';
 
@@ -17,8 +17,11 @@ enum Api {
   ItemCategories = '/hr/item-categories',
   SaveItemCategoriesBatch = '/hr/item-categories/batch',
   Titles = '/hr/titles',
-  TitleCategories = '/hr/title-categories',
+  SaveTitlesBatch = '/hr/titles/batch',
   Ranks = '/hr/ranks',
+  SaveRanksBatch = '/hr/ranks/batch',
+  RankTitles = '/hr/rank-titles',
+  SaveRankTitlesBatch = '/hr/rank-titles/batch',
   Positions = '/hr/positions',
   SavePositionsBatch = '/hr/positions/batch',
   PositionItems = '/hr/position-items',
@@ -47,12 +50,24 @@ export function getAllTitle(params: KpiRequestType) {
   return defHttp.get<TitleType[]>({ url: Api.Titles, params });
 }
 
-export function getAllTitleCategory(params: KpiRequestType) {
-  return defHttp.get<TitleCategoryType[]>({ url: Api.TitleCategories, params });
+export function saveKpiTitlesBatch(params) {
+  return defHttp.post({ url: Api.SaveTitlesBatch, params });
 }
 
 export function getAllRank(params: KpiRequestType) {
   return defHttp.get<RankType[]>({ url: Api.Ranks, params });
+}
+
+export function saveKpiRanksBatch(params) {
+  return defHttp.post({ url: Api.SaveRanksBatch, params });
+}
+
+export function getAllRankTitle(params: KpiRequestType) {
+  return defHttp.get<RankTitleType[]>({ url: Api.RankTitles, params });
+}
+
+export function saveKpiRankTitlesBatch(params) {
+  return defHttp.post({ url: Api.SaveRankTitlesBatch, params });
 }
 
 export function getAllPositionGroup(params: KpiRequestType) {

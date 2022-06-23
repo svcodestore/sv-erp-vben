@@ -21,14 +21,14 @@ export type TitleType = {
   version: string;
 } & BaseModelFields;
 
-export type TitleCategoryType = {
-  name: string;
+export type RankType = {
+  code: string;
   version: string;
 } & BaseModelFields;
 
-export type RankType = {
-  name: string;
-  version: string;
+export type RankTitleType = {
+  rankId: number;
+  titleId: number;
 } & BaseModelFields;
 
 export type PositionGroupType = {

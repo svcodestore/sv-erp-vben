@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts" setup>
-  import KpiSkeleton from '../../components/Skeleton/index.vue';
+  import KpiSkeleton from '../components/Skeleton/index.vue';
   import { FormProps, TreeSelect, TreeSelectProps, Select, SelectProps } from 'ant-design-vue';
   import { reactive } from 'vue';
   import { useMessage } from '/@/hooks/web/useMessage';

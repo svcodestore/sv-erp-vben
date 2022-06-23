@@ -1,7 +1,7 @@
 <template>
   <KpiSkeleton
-    title="职务项"
-    description="职务项列表，给职务项分配职务组形成一个职务，与绩效项组合形成职务绩效规则"
+    title="职称项"
+    description="对职级项命名形成职称"
     @form-finish="handleFinish"
     :loading="state.loading"
   >
@@ -17,23 +17,24 @@
   import { useI18n } from '/@/hooks/web/useI18n';
   import { GridPropsType } from '/@/components/Grid/src/types';
   import { KpiRequestType } from '/@/api/HR/KPI/type';
-  import { getAllPositionItem, saveKpiPositionItemsBatch } from '/@/api/HR/KPI';
+  import { getAllTitle, saveKpiTitlesBatch } from '/@/api/HR/KPI';
   import { generateBaseColumns } from '/@/utils/grid/column';
 
   const { t } = useI18n();
 
   const gridOptions = reactive<GridPropsType>({
     loading: false,
+    align: 'center',
     data: [],
-    saveApi: saveKpiPositionItemsBatch,
     insertOptions: {
       focusField: 'name',
     },
+    saveApi: saveKpiTitlesBatch,
     editRules: {
       name: [
         {
           required: true,
-          content: '职务名不能为空',
+          content: '职称名不能为空',
         },
       ],
     },
@@ -41,11 +42,10 @@
       columns: [
         {
           field: 'name',
-          title: '名称',
+          title: '职称名',
           editRender: {
             name: '$input',
           },
-          align: 'center',
         },
       ],
     }),
@@ -58,7 +58,7 @@
   const handleFinish: FormProps['onFinish'] = (queries: KpiRequestType) => {
     state.loading = true;
     gridOptions.loading = true;
-    getAllPositionItem(queries)
+    getAllTitle(queries)
       .then((data) => {
         gridOptions.data = data;
         if (!data.length) {

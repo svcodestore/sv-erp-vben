@@ -24,11 +24,26 @@
 
   const gridOptions = reactive<GridPropsType>({
     loading: false,
+    align: 'center',
     data: [],
     insertOptions: {
       focusField: 'code',
     },
     saveApi: saveKpiItems,
+    editRules: {
+      name: [
+        {
+          required: true,
+          content: '绩效名不能为空',
+        },
+      ],
+      code: [
+        {
+          required: true,
+          content: '绩效编号不能为空',
+        },
+      ],
+    },
     columns: generateBaseColumns({
       columns: [
         {
@@ -38,7 +53,6 @@
           editRender: {
             name: '$input',
           },
-          align: 'center',
         },
         {
           field: 'name',
@@ -46,7 +60,6 @@
           editRender: {
             name: '$input',
           },
-          align: 'center',
         },
       ],
     }),

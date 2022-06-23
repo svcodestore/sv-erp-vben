@@ -30,12 +30,26 @@
       focusField: 'code',
     },
     saveApi: saveKpiItemCategories,
+    editRules: {
+      name: [
+        {
+          required: true,
+          content: '类别名不能为空',
+        },
+      ],
+      code: [
+        {
+          required: true,
+          content: '类别编号不能为空',
+        },
+      ],
+    },
     columns: generateBaseColumns({
       columns: [
         {
           field: 'code',
           title: '类别编号',
-          width: 100,
+          width: 120,
           editRender: {
             name: '$input',
           },
@@ -57,12 +71,17 @@
 
   const handleFinish: FormProps['onFinish'] = (queries: KpiRequestType) => {
     state.loading = true;
-    getAllItemCategory(queries).then((data) => {
-      gridOptions.data = data;
-      if (!data.length) {
-        useMessage().createMessage.info(t('common.noData'));
-      }
-      state.loading = false;
-    });
+    gridOptions.loading = true;
+    getAllItemCategory(queries)
+      .then((data) => {
+        gridOptions.data = data;
+        if (!data.length) {
+          useMessage().createMessage.info(t('common.noData'));
+        }
+      })
+      .finally(() => {
+        state.loading = false;
+        gridOptions.loading = false;
+      });
   };
 </script>

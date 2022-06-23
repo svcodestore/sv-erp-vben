@@ -39,6 +39,14 @@
       parentField: 'pid',
     },
     stripe: false,
+    editRules: {
+      name: [
+        {
+          required: true,
+          content: '职务组名不能为空',
+        },
+      ],
+    },
     columns: generateBaseColumns({
       columns: [
         {

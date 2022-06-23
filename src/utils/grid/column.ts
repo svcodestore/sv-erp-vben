@@ -71,7 +71,7 @@ export function generateBaseColumns({
     }
   } else if (base) {
     if (isShowSeq) {
-      cols.push({ type: 'seq', width: 50 });
+      cols.push({ type: 'seq', width: 80 });
     }
     if (isShowPk) {
       cols.push(pkCol);
