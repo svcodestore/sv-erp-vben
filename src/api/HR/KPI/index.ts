@@ -8,6 +8,7 @@ import {
   PositionType,
   PositionItemType,
   RankTitleType,
+  StaffType,
 } from './type';
 import { defHttp } from '/@/utils/http/axios';
 
@@ -28,6 +29,8 @@ enum Api {
   SavePositionItemsBatch = '/hr/position-items/batch',
   PositionGroups = '/hr/position-groups',
   SavePositionGroupsBatch = '/hr/position-groups/batch',
+  Staffs = '/hr/staffs',
+  SaveStaffsBatch = '/hr/staffs/batch',
 }
 
 export function getAllItem(params: KpiRequestType) {
@@ -92,4 +95,12 @@ export function getAllPosition(params: KpiRequestType) {
 
 export function saveKpiPositionsBatch(params) {
   return defHttp.post({ url: Api.SavePositionsBatch, params });
+}
+
+export function getAllStaff(params: KpiRequestType) {
+  return defHttp.get<StaffType[]>({ url: Api.Staffs, params });
+}
+
+export function saveKpiStaffBatch(params) {
+  return defHttp.post({ url: Api.SaveStaffsBatch, params });
 }

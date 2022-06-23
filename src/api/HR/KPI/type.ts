@@ -50,3 +50,12 @@ export type PositionType = {
   scorePercent: number;
   version: string;
 } & BaseModelFields;
+
+export type StaffType = {
+  number: number;
+  name: string;
+  positionGroupId: number;
+  positionId: number;
+  rankTitleId: number;
+  employedIn: string;
+} & BaseModelFields;
