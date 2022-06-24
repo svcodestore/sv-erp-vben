@@ -179,9 +179,9 @@ const gridCustomProps = {
       exclude: ['id', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'],
     }),
   },
-  fullHieight: {
+  fullHeight: {
     type: Boolean as PropType<boolean>,
-    default: () => false,
+    default: () => true,
   },
 };
 

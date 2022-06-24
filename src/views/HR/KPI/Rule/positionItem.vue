@@ -1,6 +1,6 @@
 <template>
   <KpiSkeleton title="职务表" @form-finish="handleFinish" :loading="state.loading">
-    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish">
+    <sv-grid v-bind="gridOptions" @refresh="handleFinish">
       <template #group="{ row, column }">
         {{ getGroupName(row[column.field]) }}
       </template>

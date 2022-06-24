@@ -115,6 +115,7 @@
   const gridOptions = reactive<GridPropsType<StaffType>>({
     loading: false,
     align: 'center',
+    height: '100%',
     data: [],
     insertedReplace,
     updatedReplace,

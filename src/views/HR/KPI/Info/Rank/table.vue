@@ -5,7 +5,7 @@
     @form-finish="handleFinish"
     :loading="state.loading"
   >
-    <sv-grid class="mt-4" v-bind="gridOptions" @refresh="handleFinish">
+    <sv-grid v-bind="gridOptions" @refresh="handleFinish">
       <template #rank="{ row, column }">
         {{ state.ranks.find((e) => e.id == row[column.field])?.code }}
       </template>

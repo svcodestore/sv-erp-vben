@@ -55,7 +55,7 @@
       </Form>
     </div>
 
-    <sv-grid class="mt-4" v-bind="gridOptions" v-if="state.isShowGrid">
+    <sv-grid v-bind="gridOptions" v-if="state.isShowGrid">
       <template #dingDanShuLiang="{ row, column }">
         <span class="order-numeric order-numeric__bolder order-numeric__bolder-black">
           {{ toThousandthDigit(row[column.property]) }}

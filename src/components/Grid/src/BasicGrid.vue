@@ -1,46 +1,34 @@
 <template>
-  <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1" v-loading="loading">
-    <template #toolbar>
-      <slot name="toolbar">
-        <Toolbar ref="toolbar" class="mb-2px" v-if="showToolbar">
-          <template #left>
-            <slot name="toolbarLeft">
-              <ToolbarLeft
-                v-bind="toolbarAttrs"
-                @remove="unsetCurrentRow"
-                @revert="unsetCurrentRow"
-              />
-            </slot>
-          </template>
-          <template #center>
-            <slot name="toolbarCenter">
-              <ToolbarCenter v-bind="toolbarAttrs" />
-            </slot>
-          </template>
-          <template #right>
-            <slot name="toolbarRight">
-              <ToolbarRight v-bind="toolbarAttrs" @search="handleFilterData" />
-            </slot>
-          </template>
-        </Toolbar>
-      </slot>
-    </template>
-    <template
-      v-for="slotname in columnSlots"
-      #[slotname]="{
-        row,
-        rowIndex,
-        $rowIndex,
-        column,
-        columnIndex,
-        $columnIndex,
-        _columnIndex,
-        $panel,
-      }"
-    >
-      <slot
-        :name="slotname"
-        v-bind="{
+  <PageWrapper content-full-height>
+    <vxe-grid ref="xGrid" v-bind="attrs" v-on="events" class="mb-1" v-loading="loading">
+      <template #toolbar>
+        <slot name="toolbar">
+          <Toolbar ref="toolbar" v-if="showToolbar">
+            <template #left>
+              <slot name="toolbarLeft">
+                <ToolbarLeft
+                  v-bind="toolbarAttrs"
+                  @remove="unsetCurrentRow"
+                  @revert="unsetCurrentRow"
+                />
+              </slot>
+            </template>
+            <template #center>
+              <slot name="toolbarCenter">
+                <ToolbarCenter v-bind="toolbarAttrs" />
+              </slot>
+            </template>
+            <template #right>
+              <slot name="toolbarRight">
+                <ToolbarRight v-bind="toolbarAttrs" @search="handleFilterData" />
+              </slot>
+            </template>
+          </Toolbar>
+        </slot>
+      </template>
+      <template
+        v-for="slotname in columnSlots"
+        #[slotname]="{
           row,
           rowIndex,
           $rowIndex,
@@ -50,12 +38,27 @@
           _columnIndex,
           $panel,
         }"
-      ></slot>
-    </template>
-  </vxe-grid>
+      >
+        <slot
+          :name="slotname"
+          v-bind="{
+            row,
+            rowIndex,
+            $rowIndex,
+            column,
+            columnIndex,
+            $columnIndex,
+            _columnIndex,
+            $panel,
+          }"
+        ></slot>
+      </template>
+    </vxe-grid>
+  </PageWrapper>
 </template>
 
 <script lang="ts" setup>
+  import { PageWrapper } from '/@/components/Page';
   import { ref, computed, watch, reactive } from 'vue';
   import type { VxeGridInstance } from 'vxe-table';
 
@@ -88,34 +91,6 @@
       columns: wrappedColumns.value,
       loading: undefined,
     }) as GridPropsType;
-
-    if (props.fullHieight) {
-      const elem = document.querySelector('.vxe-grid')?.parentNode;
-      // @ts-ignore
-      let height: number = elem?.clientHeight;
-
-      if (elem?.childNodes) {
-        for (const child of Array.from(elem.childNodes)) {
-          // @ts-ignore
-          const classList = child.classList;
-          if (!classList || !Array.from(classList).includes('vxe-grid')) {
-            // @ts-ignore
-            child.clientHeight && (height -= child.clientHeight);
-          }
-        }
-      }
-
-      wrap = { ...wrap, height };
-    }
-
-    // 数据条目小于150不起用虚拟滚动
-    if (gridData.value.length < 150) {
-      wrap.height = undefined;
-      wrap.showOverflow = false;
-      wrap.showHeaderOverflow = false;
-      wrap.scrollX = { enabled: false };
-      wrap.scrollY = { enabled: false };
-    }
 
     if (!props.proxyConfig) {
       return Object.assign(wrap, {
