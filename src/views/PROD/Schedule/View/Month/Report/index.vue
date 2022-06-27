@@ -8,7 +8,7 @@
       </template>
     </Calendar>
   </div>
-  <table style="text-align: center; width: 100%; border-collapse: collapse">
+  <table style="text-align: center; width: 100%; border-collapse: collapse; margin-top: 5px">
     <template v-for="record in data" :key="record">
       <tr>
         <td style="border: 1px solid black">客户代号</td>

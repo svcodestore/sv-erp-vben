@@ -4,7 +4,7 @@
     title="标准工时设置"
     content=" 排程计划中生产款工站的属性设置，不同的属性设置将影响排程计划时间。"
   >
-    <sv-grid class="bg-white" v-bind="gridOptions">
+    <sv-grid v-bind="gridOptions">
       <template #isMaster="{ row, column }">
         <span>
           {{ row[column.property] == 1 ? '主流程' : '副流程' }}
@@ -22,7 +22,6 @@
 
   const gridOptions = reactive<GridPropsType>({
     loading: false,
-    height: 600,
     proxyConfig: {
       ajax: {
         query: async () => {
