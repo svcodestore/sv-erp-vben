@@ -2,7 +2,7 @@
   <table width="100%" style="border-collapse: collapse">
     <tr v-for="(_, idx) in Array(daysArr.length / 7)" :key="idx">
       <td
-        style="border: 1px solid black; padding: 0; margin: 0"
+        style="border: 1px solid black; padding: 0; margin: 0; width: 500px"
         v-for="(__, i) in Array(7)"
         :key="i"
       >

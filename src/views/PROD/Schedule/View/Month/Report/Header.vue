@@ -16,7 +16,7 @@
   <div style="font-size: 22px">
     上下班时间：<b>{{ commuterTime }}</b> | 出勤天数：<b>{{ attendanceDays }}</b> | 出勤时间：
     <b>{{ attendanceHours }}</b>
-    | 休息日：{{ restDay }}
+    | 休息日：<b>{{ restDays }}</b>
   </div>
 </template>
 
@@ -31,14 +31,14 @@
       default: () => '',
     },
     attendanceHours: {
-      type: String,
-      default: () => '',
+      type: Number,
+      default: () => undefined,
     },
     attendanceDays: {
-      type: String,
-      default: () => '',
+      type: Number,
+      default: () => undefined,
     },
-    restDay: {
+    restDays: {
       type: String,
       default: () => '',
     },

@@ -28,7 +28,12 @@
     </div>
 
     <div id="report" class="bg-white mt-4" v-if="state.data.length">
-      <Report :data="state.data" :date="formState.date" />
+      <Report
+        :calendarData="state.calendar"
+        :data="state.data"
+        :date="formState.date"
+        :reportTitle="reportTitle"
+      />
     </div>
   </PageWrapper>
 </template>
@@ -43,9 +48,9 @@
     FormProps,
     Button,
   } from 'ant-design-vue';
-  import { reactive, UnwrapRef } from 'vue';
-  import { ScheduleItem, ScheduleParams } from '/@/api/PROD/Schedule/type';
-  import { schedule } from '/@/api/PROD/Schedule';
+  import { computed, reactive, UnwrapRef } from 'vue';
+  import { CalendarType, ScheduleItem, ScheduleParams } from '/@/api/PROD/Schedule/type';
+  import { getCalendar, schedule } from '/@/api/PROD/Schedule';
   import { PageWrapper } from '/@/components/Page';
   import { dateUtil } from '/@/utils/dateUtil';
   import { useMessage } from '/@/hooks/web/useMessage';
@@ -57,6 +62,7 @@
 
   const state = reactive({
     headerData: {},
+    calendar: [] as CalendarType[],
     data: [] as ScheduleItem[],
     loading: false,
     workLines: [
@@ -82,12 +88,29 @@
     date: dateUtil(),
     workLine: 'N',
   });
+  const reportTitle = computed(
+    () =>
+      `SV ${
+        state.workLines.find((line) => line.value === formState.workLine)?.label
+      } ${formState.date.format('YYYY年MM月')} 生产入库计划表`,
+  );
   const handleFinish: FormProps['onFinish'] = () => {
     state.loading = true;
+
+    const workLine = formState.workLine;
+    const year = formState.date.year();
+    const month = formState.date.month() + 1;
+
+    getCalendar({ year, month })
+      .then((res) => {
+        state.calendar = res;
+      })
+      .catch(() => {});
+
     schedule({
-      workLine: formState.workLine,
-      year: formState.date.year(),
-      month: formState.date.month() + 1,
+      workLine,
+      year,
+      month,
     })
       .then((res) => {
         state.data = res;
