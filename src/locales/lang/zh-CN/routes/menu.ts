@@ -33,7 +33,6 @@ export default {
   HrKpiRuleTable: '评分规则表',
   HrKpiRuleScore: '评分规则项',
   HrKpiRulePosition: '职务规则项',
-  HrKpiRuleRank: '职级规则项',
   HrKpiScore: '评分',
   HrKpiScoreItem: '项目评分',
   HrKpiScoreStaff: '员工评分',

@@ -33,7 +33,6 @@ export default {
   HrKpiRuleTable: 'List',
   HrKpiRuleScore: 'Score Rule',
   HrKpiRulePosition: 'Position Rule',
-  HrKpiRuleRank: 'Rank Rule',
   HrKpiScore: 'Score',
   HrKpiScoreItem: 'Item Score',
   HrKpiScoreStaff: 'Staff Score',
