@@ -9,6 +9,10 @@ import {
   PositionItemType,
   RankTitleType,
   StaffType,
+  StaffScoreType,
+  GroupScoreType,
+  RuleType,
+  RuleItemType,
 } from './type';
 import { defHttp } from '/@/utils/http/axios';
 
@@ -31,6 +35,14 @@ enum Api {
   SavePositionGroupsBatch = '/hr/position-groups/batch',
   Staffs = '/hr/staffs',
   SaveStaffsBatch = '/hr/staffs/batch',
+  StaffScores = '/hr/staff-scores',
+  StaffScoresBatch = '/hr/staff-scores/batch',
+  Rules = '/hr/rules',
+  SaveRulesBatch = '/hr/rules/batch',
+  RuleItems = '/hr/rule-items',
+  SaveRuleItemsBatch = '/hr/rule-items/batch',
+  GroupScores = '/hr/group-scores',
+  SaveGroupScoresBatch = '/hr/group-scores/batch',
 }
 
 export function getAllItem(params: KpiRequestType) {
@@ -103,4 +115,36 @@ export function getAllStaff(params: KpiRequestType) {
 
 export function saveKpiStaffBatch(params) {
   return defHttp.post({ url: Api.SaveStaffsBatch, params });
+}
+
+export function getAllStaffScore(params: KpiRequestType) {
+  return defHttp.get<StaffScoreType[]>({ url: Api.StaffScores, params });
+}
+
+export function saveKpiStaffScoresBatch(params) {
+  return defHttp.post({ url: Api.SaveStaffsBatch, params });
+}
+
+export function getAllGroupScore(params: KpiRequestType) {
+  return defHttp.get<GroupScoreType[]>({ url: Api.GroupScores, params });
+}
+
+export function saveKpiGroupScoresBatch(params) {
+  return defHttp.post({ url: Api.SaveGroupScoresBatch, params });
+}
+
+export function getAllRule(params: KpiRequestType) {
+  return defHttp.get<RuleType[]>({ url: Api.Rules, params });
+}
+
+export function saveKpiRulesBatch(params) {
+  return defHttp.post({ url: Api.SaveRulesBatch, params });
+}
+
+export function getAllRuleItem(params: KpiRequestType) {
+  return defHttp.get<RuleItemType[]>({ url: Api.RuleItems, params });
+}
+
+export function saveKpiRuleItemBatch(params) {
+  return defHttp.post({ url: Api.SaveRuleItemsBatch, params });
 }

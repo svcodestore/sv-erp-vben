@@ -59,3 +59,31 @@ export type StaffType = {
   rankTitleId: number;
   employedIn: string;
 } & BaseModelFields;
+
+export type RuleItemType = {
+  category: string;
+  expression: string;
+  remark: string;
+} & BaseModelFields;
+
+export type RuleType = {
+  kpiId: number;
+  positionGroupId: number;
+  ruleItemId: number;
+  ruleExpression: string;
+} & BaseModelFields;
+
+export type GroupScoreType = {
+  ruleId: number;
+  month: string;
+  score: string;
+  kpiScore: string;
+} & BaseModelFields;
+
+export type StaffScoreType = {
+  staffId: number;
+  kpiId: number;
+  month: string;
+  score: string;
+  kpiScore: string;
+} & BaseModelFields;
