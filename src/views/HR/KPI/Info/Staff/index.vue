@@ -107,7 +107,8 @@
   };
 
   const updatedReplace = (record: StaffType) => {
-    record.positionGroupId = +(record.positionGroupId + '').split('. ')[0];
+    record.positionGroupId &&
+      (record.positionGroupId = +(record.positionGroupId + '').split('. ')[0]);
 
     return record;
   };

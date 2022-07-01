@@ -119,7 +119,7 @@
   };
 
   const updatedReplace = (record: PositionType) => {
-    record.groupId = +(record.groupId + '').split('. ')[0];
+    record.groupId && (record.groupId = +(record.groupId + '').split('. ')[0]);
 
     return record;
   };
