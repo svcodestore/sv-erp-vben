@@ -132,7 +132,7 @@ const gridCustomProps = {
   },
   editable: {
     type: Boolean as PropType<boolean>,
-    default: () => false,
+    default: () => true,
   },
   readable: {
     type: Boolean as PropType<boolean>,
@@ -140,11 +140,15 @@ const gridCustomProps = {
   },
   writable: {
     type: Boolean as PropType<boolean>,
-    default: () => false,
+    default: () => true,
+  },
+  insertable: {
+    type: Boolean as PropType<boolean>,
+    default: () => true,
   },
   removable: {
     type: Boolean as PropType<boolean>,
-    default: () => false,
+    default: () => true,
   },
   importable: {
     type: Boolean as PropType<boolean>,
@@ -205,6 +209,14 @@ export const toolbarCustomProps = {
     default: () => ({
       exclude: ['id', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy'],
     }),
+  },
+  insertable: {
+    type: Boolean as PropType<boolean>,
+    default: () => true,
+  },
+  removable: {
+    type: Boolean as PropType<boolean>,
+    default: () => true,
   },
 };
 

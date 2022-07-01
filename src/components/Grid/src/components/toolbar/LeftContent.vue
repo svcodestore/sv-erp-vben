@@ -17,7 +17,13 @@
           <SubnodeOutlined />{{ t('component.grid.addSubNode') }}
         </Button>
       </template>
-      <Button type="primary" shape="circle" :title="t('common.insert')" @click="insert">
+      <Button
+        type="primary"
+        shape="circle"
+        :title="t('common.insert')"
+        @click="insert"
+        v-if="insertable"
+      >
         <PlusOutlined />
       </Button>
     </Popover>
@@ -34,6 +40,7 @@
         :title="t('common.delText')"
         @click="remove"
         :disabled="isDisableDel"
+        v-if="removable"
       >
         <DeleteOutlined />
       </Button>

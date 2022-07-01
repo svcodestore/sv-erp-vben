@@ -71,13 +71,6 @@ export const wrapColumns = (columns: GridColumnType[], props: GridPropsType) => 
           if (!col.editRender.name && Array.isArray(col.editRender.options)) {
             col.editRender.name = '$select';
           }
-        } else if (col.editable === void 0) {
-          col.editRender = {
-            name: 'input',
-          };
-        }
-        if (col.writable === false) {
-          col.editRender = void 0;
         }
       }
 

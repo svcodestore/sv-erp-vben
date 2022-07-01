@@ -132,6 +132,8 @@
     saveApi: props.saveApi,
     insertOptions: props.insertOptions,
     simplicityColumns: props.simplicityColumns,
+    removable: props.removable,
+    insertable: props.insertable,
   });
 
   const currentChangeEvent = ({

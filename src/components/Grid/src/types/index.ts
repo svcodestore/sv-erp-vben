@@ -15,6 +15,8 @@ type ToolBarCustomType = Partial<{
   insertOptions: Partial<InsertOptionsType>;
   gridTitle: string;
   desc: string;
+  removable: boolean;
+  insertable: boolean;
 }>;
 
 type ToolBarType<T = any> = ToolBarCustomType & {
@@ -42,6 +44,7 @@ type GridCustomType = Partial<{
   editable: boolean;
   readable: boolean;
   writable: boolean;
+  insertable: boolean;
   removable: boolean;
   importable: boolean;
   exportable: boolean;
