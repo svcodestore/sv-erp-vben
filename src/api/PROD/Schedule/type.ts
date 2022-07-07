@@ -31,6 +31,7 @@ export type SchedulePhaseItem = {
   isMaster: number;
   startAt: string;
   completeAt: string;
+  qty?: number;
 };
 
 export type ScheduleItem = Po & {

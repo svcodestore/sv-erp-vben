@@ -7,14 +7,23 @@
     <div class="py-4 bg-white flex flex-col justify-center items-center">
       <Form layout="inline" :model="formState" @finish="handleFinish">
         <FormItem>
-          <Select v-model:value="formState.workLine" style="width: 120px">
+          <Select
+            v-model:value="formState.workLine"
+            style="width: 120px"
+            @change="state.isShowContent = false"
+          >
             <SelectOption v-for="line in state.workLines" :key="line.value">
               {{ line.label }}
             </SelectOption>
           </Select>
         </FormItem>
         <FormItem>
-          <DatePicker v-model:value="formState.date" picker="month" :allowClear="false" />
+          <DatePicker
+            v-model:value="formState.date"
+            picker="month"
+            :allowClear="false"
+            @change="state.isShowContent = false"
+          />
         </FormItem>
         <FormItem>
           <Button type="primary" htmlType="submit" :loading="state.loading">
@@ -27,7 +36,7 @@
       </Form>
     </div>
 
-    <div id="report" class="bg-white mt-4" v-if="state.data.length">
+    <div id="report" class="bg-white mt-4" v-if="state.data.length && state.isShowContent">
       <Report
         :calendarData="state.calendar"
         :data="state.data"
@@ -61,6 +70,7 @@
   const { t } = useI18n();
 
   const state = reactive({
+    isShowContent: false,
     headerData: {},
     calendar: [] as CalendarType[],
     data: [] as ScheduleItem[],
@@ -121,6 +131,7 @@
       })
       .finally(() => {
         state.loading = false;
+        state.isShowContent = true;
       });
   };
 </script>

@@ -13,6 +13,7 @@
           style="border: 1px solid black"
         >
           {{ phase.name }}
+          <span v-if="phase.qty">{{ phase.qty }}</span>
         </td>
       </tr>
       <tr>
@@ -45,6 +46,7 @@
           style="border: 1px solid black"
         >
           {{ phase.name }}
+          <span v-if="phase.qty">{{ phase.qty }}</span>
         </td>
       </tr>
       <tr>

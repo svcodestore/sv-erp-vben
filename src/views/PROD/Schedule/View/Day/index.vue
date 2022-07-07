@@ -3,14 +3,23 @@
     <div class="py-4 bg-white flex flex-col justify-center items-center">
       <Form layout="inline" :model="formState" @finish="handleFinish">
         <FormItem>
-          <Select v-model:value="formState.workLine" style="width: 120px">
+          <Select
+            v-model:value="formState.workLine"
+            style="width: 120px"
+            @change="state.isShowContent = false"
+          >
             <SelectOption v-for="line in state.workLines" :key="line.value">
               {{ line.label }}
             </SelectOption>
           </Select>
         </FormItem>
         <FormItem>
-          <DatePicker v-model:value="formState.date" picker="date" :allowClear="false" />
+          <DatePicker
+            v-model:value="formState.date"
+            picker="date"
+            :allowClear="false"
+            @change="state.isShowContent = false"
+          />
         </FormItem>
         <FormItem>
           <Button type="primary" htmlType="submit" :loading="state.loading">
@@ -20,7 +29,7 @@
       </Form>
     </div>
 
-    <div class="mt-4" v-if="state.data.length">
+    <div class="mt-4" v-if="state.data.length && state.isShowContent">
       <span style="letter-spacing: 6px">
         <b>斯达文星皮具有限公司</b>
       </span>
@@ -68,6 +77,7 @@
   const { t } = useI18n();
 
   const state = reactive({
+    isShowContent: false,
     data: [] as ScheduleItem[],
     loading: false,
     workLines: [
@@ -124,6 +134,27 @@
               dateUtil(dateUtil(p.completeAt).format('YYYY-MM-DD')).valueOf() >=
                 formState.date.valueOf(),
           );
+
+          item.phases = item.phases.map((p) => {
+            const cost = +p.costTime;
+            if (cost === 0) {
+              p.completeAt = '';
+            } else {
+              let date = dateUtil(p.startAt).format('YYYY-MM-DD');
+              let startAt = p.startAt;
+              if (formState.date.valueOf() > dateUtil(p.startAt).valueOf()) {
+                date = formState.date.format('YYYY-MM-DD');
+                startAt = dateUtil(`${date} 07:30:00`).format('YYYY-MM-DD');
+              }
+              const minutes =
+                (dateUtil(`${date} 20:30:00`).valueOf() - dateUtil(startAt).valueOf()) / 1000;
+              p.qty = Math.floor(minutes / cost);
+            }
+
+            return p;
+          });
+
+          item.itemQty = Math.min(...item.phases.map((p) => p.qty || 0));
         });
 
         state.data = data;
@@ -134,6 +165,7 @@
       })
       .finally(() => {
         state.loading = false;
+        state.isShowContent = true;
       });
   };
 </script>
