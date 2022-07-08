@@ -1,4 +1,3 @@
-import { APP_ID } from './../../enums/cacheEnum';
 import type {
   ProjectConfig,
   HeaderSetting,
@@ -13,6 +12,7 @@ import { store } from '/@/store';
 
 import { ThemeEnum } from '/@/enums/appEnum';
 import {
+  APP_ID,
   APP_DARK_MODE_KEY_,
   CLIENT_ID,
   PROJ_CFG_KEY,

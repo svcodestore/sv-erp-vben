@@ -17,6 +17,7 @@ import {
   CLIENT_ID,
   REDIRECT_URIS,
   LOGIN_URIS,
+  APP_ID,
 } from '/@/enums/cacheEnum';
 import { DEFAULT_CACHE_TIME } from '/@/settings/encryptionSetting';
 import { toRaw } from 'vue';
@@ -26,6 +27,7 @@ interface BasicStore {
   [ACCESS_TOKEN_KEY]: string | number | null | undefined;
   [REFRESH_TOKEN_KEY]: string | number | null | undefined;
   [CLIENT_ID]: string | null | undefined;
+  [APP_ID]: string | null | undefined;
   [REDIRECT_URIS]: string | null | undefined;
   [LOGIN_URIS]: string | null | undefined;
   [USER_INFO_KEY]: UserInfo;
