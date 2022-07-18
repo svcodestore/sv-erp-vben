@@ -3,8 +3,8 @@
  */
 import dayjs, { Dayjs } from 'dayjs';
 
-const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
-const DATE_FORMAT = 'YYYY-MM-DD';
+export const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+export const DATE_FORMAT = 'YYYY-MM-DD';
 
 export type DateUtil = Dayjs;
 export const dateUtil = dayjs;
