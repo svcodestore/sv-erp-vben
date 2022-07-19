@@ -1,11 +1,10 @@
-import { CalendarType, Po, ScheduleItem, SchedulePhaseItem, ScheduleRequest } from './type';
+import { Po, ScheduleItem, SchedulePhaseItem, ScheduleRequest } from './type';
 import { defHttp } from '/@/utils/http/axios';
 
 enum Api {
   Schedule = '/prod/schedule',
   Phases = '/prod/phases',
   Po = '/prod/po',
-  Calendar = '/prod/calendar',
 }
 
 export function schedule(params: ScheduleRequest) {
@@ -18,8 +17,4 @@ export function getPhaseByCode(params?: { code: string }) {
 
 export function getPo(params: ScheduleRequest) {
   return defHttp.get<Po[]>({ url: Api.Po, params });
-}
-
-export function getCalendar(params: { year: number; month: number }) {
-  return defHttp.get<CalendarType[]>({ url: Api.Calendar, params });
 }

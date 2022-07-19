@@ -37,12 +37,3 @@ export type SchedulePhaseItem = {
 export type ScheduleItem = Po & {
   phases: SchedulePhaseItem[];
 };
-
-export type CalendarType = {
-  date: string;
-  year: string;
-  month: string;
-  day: string;
-  isRest: number;
-  profile: string;
-};
