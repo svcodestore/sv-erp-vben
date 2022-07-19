@@ -41,7 +41,7 @@
   import Calendar from './Calendar.vue';
   import Table from './Table.vue';
   import { DateUtil } from '/@/utils/dateUtil';
-  import type { CalendarType } from '/@/api/PROD/Schedule/type';
+  import type { CalendarType } from '/@/api/PROD/Calendar/type';
   import { computed } from 'vue';
 
   const props = defineProps({

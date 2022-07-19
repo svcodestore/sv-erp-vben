@@ -4,7 +4,36 @@
     title="标准工时设置"
     content=" 排程计划中生产款工站的属性设置，不同的属性设置将影响排程计划时间。"
   >
-    <sv-grid v-bind="gridOptions">
+    <div class="py-4 bg-white flex flex-col justify-center items-center">
+      <Form layout="inline" :model="formState" @finish="handleFinish">
+        <FormItem>
+          <Select
+            v-model:value="formState.workLine"
+            style="width: 120px"
+            @change="state.isShowContent = false"
+          >
+            <SelectOption v-for="line in state.workLines" :key="line.value">
+              {{ line.label }}
+            </SelectOption>
+          </Select>
+        </FormItem>
+        <FormItem>
+          <MonthPicker
+            v-model:value="formState.date"
+            picker="date"
+            :allowClear="false"
+            @change="state.isShowContent = false"
+          />
+        </FormItem>
+        <FormItem>
+          <Button type="primary" htmlType="submit" :loading="state.loading">
+            {{ t('common.queryText') }}
+          </Button>
+        </FormItem>
+      </Form>
+    </div>
+
+    <sv-grid v-bind="gridOptions" v-show="gridOptions.data?.length">
       <template #isMaster="{ row, column }">
         <span>
           {{ row[column.property] == 1 ? '主流程' : '副流程' }}
@@ -16,25 +45,49 @@
 
 <script lang="ts" setup>
   import { PageWrapper } from '/@/components/Page';
-  import { reactive } from 'vue';
   import { GridPropsType } from '/@/components/Grid/src/types';
   import { getPhaseByCode, getPo } from '/@/api/PROD/Schedule';
+  import {
+    Form,
+    FormItem,
+    Select,
+    SelectOption,
+    MonthPicker,
+    FormProps,
+    Button,
+  } from 'ant-design-vue';
+  import { UnwrapRef, reactive } from 'vue';
+  import { ScheduleItem, ScheduleParams } from '/@/api/PROD/Schedule/type';
+  import { useI18n } from '/@/hooks/web/useI18n';
+  import { dateUtil } from '/@/utils/dateUtil';
+  import { useMessage } from '/@/hooks/web/useMessage';
+
+  const { t } = useI18n();
+
+  const state = reactive({
+    isShowContent: false,
+    data: [] as ScheduleItem[],
+    loading: false,
+    workLines: [
+      {
+        label: t('routes.prod.schedule.view.month.prodLine8'),
+        value: 'N',
+      },
+      {
+        label: t('routes.prod.schedule.view.month.prodLine9'),
+        value: 'V',
+      },
+    ],
+  });
+
+  const formState: UnwrapRef<ScheduleParams> = reactive({
+    date: dateUtil(),
+    workLine: 'N',
+  });
 
   const gridOptions = reactive<GridPropsType>({
     loading: false,
-    proxyConfig: {
-      ajax: {
-        query: async () => {
-          const po = await getPo({
-            workLine: 'N',
-            year: 2022,
-            month: 3,
-          });
-          const code = po.map((e) => e.itemCode).join(',');
-          return getPhaseByCode({ code });
-        },
-      },
-    },
+    data: [],
     columns: [
       { type: 'seq', width: 50 },
       { title: '款号', field: 'code' },
@@ -95,4 +148,27 @@
       },
     ],
   });
+
+  const handleFinish: FormProps['onFinish'] = async () => {
+    state.loading = true;
+    gridOptions.loading = true;
+
+    const workLine = formState.workLine;
+    const year = formState.date.year();
+    const month = formState.date.month() + 1;
+
+    const po = await getPo({
+      workLine,
+      year,
+      month,
+    });
+    const code = po.map((e) => e.itemCode).join(',');
+    gridOptions.data = await getPhaseByCode({ code });
+    if (gridOptions.data.length === 0) {
+      useMessage().createMessage.info('暂无数据');
+    }
+
+    gridOptions.loading = false;
+    state.loading = false;
+  };
 </script>
