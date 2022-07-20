@@ -4,6 +4,7 @@ import { defHttp } from '/@/utils/http/axios';
 enum Api {
   Schedule = '/prod/schedule',
   Phases = '/prod/phases',
+  PhasesBatch = '/prod/phases/batch',
   Po = '/prod/po',
 }
 
@@ -17,4 +18,8 @@ export function getPhaseByCode(params?: { code: string }) {
 
 export function getPo(params: ScheduleRequest) {
   return defHttp.get<Po[]>({ url: Api.Po, params });
+}
+
+export function saveSchdPhasesBatch(params) {
+  return defHttp.post({ url: Api.PhasesBatch, params });
 }

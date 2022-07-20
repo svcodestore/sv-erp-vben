@@ -22,6 +22,7 @@ export type Po = {
 
 export type SchedulePhaseItem = {
   name: string;
+  code: string;
   codeId: string;
   costTime: number;
   aheadTime: number;

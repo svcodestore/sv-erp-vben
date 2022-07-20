@@ -33,7 +33,12 @@
       </Form>
     </div>
 
-    <sv-grid v-bind="gridOptions" v-show="gridOptions.data?.length">
+    <sv-grid
+      ref="gridInstance"
+      v-bind="gridOptions"
+      v-show="gridOptions.data?.length"
+      @refresh="handleFinish"
+    >
       <template #isMaster="{ row, column }">
         <span>
           {{ row[column.property] == 1 ? '主流程' : '副流程' }}
@@ -46,7 +51,7 @@
 <script lang="ts" setup>
   import { PageWrapper } from '/@/components/Page';
   import { GridPropsType } from '/@/components/Grid/src/types';
-  import { getPhaseByCode, getPo } from '/@/api/PROD/Schedule';
+  import { getPhaseByCode, getPo, saveSchdPhasesBatch } from '/@/api/PROD/Schedule';
   import {
     Form,
     FormItem,
@@ -56,13 +61,16 @@
     FormProps,
     Button,
   } from 'ant-design-vue';
-  import { UnwrapRef, reactive } from 'vue';
-  import { ScheduleItem, ScheduleParams } from '/@/api/PROD/Schedule/type';
+  import { UnwrapRef, reactive, ref } from 'vue';
+  import { ScheduleItem, ScheduleParams, SchedulePhaseItem } from '/@/api/PROD/Schedule/type';
   import { useI18n } from '/@/hooks/web/useI18n';
   import { dateUtil } from '/@/utils/dateUtil';
   import { useMessage } from '/@/hooks/web/useMessage';
+  import { VxeGridInstance } from 'vxe-table';
 
   const { t } = useI18n();
+
+  const gridInstance = ref({} as { xGrid: VxeGridInstance });
 
   const state = reactive({
     isShowContent: false,
@@ -85,12 +93,13 @@
     workLine: 'N',
   });
 
-  const gridOptions = reactive<GridPropsType>({
+  const gridOptions = reactive<GridPropsType<SchedulePhaseItem>>({
     loading: false,
+    saveApi: saveSchdPhasesBatch,
     data: [],
     columns: [
       { type: 'seq', width: 50 },
-      { title: '款号', field: 'code' },
+      { title: '款号', field: 'code', filters: [] },
       { title: '工站号', field: 'codeId' },
       { title: '工站', field: 'name' },
       {
@@ -166,6 +175,17 @@
     gridOptions.data = await getPhaseByCode({ code });
     if (gridOptions.data.length === 0) {
       useMessage().createMessage.info('暂无数据');
+    }
+
+    const $table = gridInstance.value.xGrid;
+    const column = $table.getColumnByField('code');
+    if (column) {
+      const filters = [...new Set(gridOptions.data?.map((item) => item.code))].map((code) => ({
+        label: code,
+        value: code,
+      }));
+
+      $table.setFilter(column, filters);
     }
 
     gridOptions.loading = false;
